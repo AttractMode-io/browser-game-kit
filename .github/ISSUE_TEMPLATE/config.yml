@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Account integration and client registration
+    url: https://attractmode.io/developers
+    about: Registration requires review. Do not post secrets in an issue.
+  - name: Security report
+    url: https://github.com/AttractMode-io/browser-game-kit/security/policy
+    about: Follow the private reporting instructions.

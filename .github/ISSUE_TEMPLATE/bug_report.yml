@@ -1,0 +1,24 @@
+name: Bug report
+description: Report a reproducible problem with the kit.
+body:
+  - type: markdown
+    attributes:
+      value: Do not include credentials or player data. Security issues go privately to hello@attractmode.io.
+  - type: input
+    id: version
+    attributes:
+      label: Kit release and Node version
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
