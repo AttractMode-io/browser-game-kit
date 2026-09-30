@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-09-29",
+  "releaseScope": "This bundled release; not a live API status probe",
+  "officialRepository": "https://github.com/AttractMode-io/browser-game-kit",
+  "capabilities": [
+    {
+      "id": "accounts",
+      "status": "registration_required",
+      "surface": "OIDC backend adapter",
+      "description": "Mock works locally. Production sign-in requires separately approved client, exact callbacks and explicit third-party consent."
+    },
+    {
+      "id": "catalog-community",
+      "status": "website_only",
+      "surface": "https://attractmode.io",
+      "description": "Game/studio listings, saves, follows and moderated reviews are website features, not a general in-game community API."
+    },
+    {
+      "id": "achievements",
+      "status": "not_available_in_kit",
+      "surface": null,
+      "description": "No supported third-party API contract shipped in this release."
+    },
+    {
+      "id": "shared-xp",
+      "status": "not_available_in_kit",
+      "surface": null,
+      "description": "No supported third-party API contract shipped in this release."
+    },
+    {
+      "id": "playtime",
+      "status": "not_available_in_kit",
+      "surface": null,
+      "description": "No supported third-party API contract shipped in this release."
+    },
+    {
+      "id": "payments",
+      "status": "not_available_in_kit",
+      "surface": null,
+      "description": "No supported third-party API contract shipped in this release."
+    },
+    {
+      "id": "subscriptions",
+      "status": "not_available_in_kit",
+      "surface": null,
+      "description": "No supported third-party API contract shipped in this release."
+    },
+    {
+      "id": "revenue-sharing",
+      "status": "not_available_in_kit",
+      "surface": null,
+      "description": "No supported third-party API contract shipped in this release."
+    },
+    {
+      "id": "cloud-saves",
+      "status": "not_available_in_kit",
+      "surface": null,
+      "description": "No supported third-party API contract shipped in this release."
+    }
+  ]
+}

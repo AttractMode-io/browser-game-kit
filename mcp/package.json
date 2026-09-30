@@ -1,0 +1,18 @@
+{
+  "name": "attract-mode-docs-mcp",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "description": "Read-only local documentation tools for the Attract Mode browser-game kit",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test server.test.mjs ../agents/install.test.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.31.0",
+    "zod": "3.25.76"
+  }
+}
