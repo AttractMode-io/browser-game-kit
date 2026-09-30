@@ -1,0 +1,45 @@
+:root {
+  font-family: system-ui, sans-serif;
+  color: #eef3f8;
+  background: #10151b;
+}
+main {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+form {
+  display: inline-block;
+  margin: 0.3rem;
+}
+form[hidden] {
+  display: none;
+}
+button {
+  min-height: 44px;
+  padding: 0.7rem 1rem;
+  border: 1px solid #8995a4;
+  border-radius: 8px;
+  background: #ffb640;
+  color: #10151b;
+  font: inherit;
+}
+button:focus-visible {
+  outline: 3px solid #74d7ff;
+  outline-offset: 3px;
+}
+#arena {
+  height: 260px;
+  position: relative;
+  border: 1px solid #8995a4;
+  border-radius: 10px;
+}
+#target {
+  position: absolute;
+  top: 30%;
+  left: 40%;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  font-size: 2rem;
+}
