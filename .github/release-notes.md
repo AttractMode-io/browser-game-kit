@@ -6,3 +6,5 @@ This release's default login is a clearly labeled simulation. Real Attract Mode 
 
 Source: https://github.com/AttractMode-io/browser-game-kit
 Docs: https://attractmode.io/docs
+
+This update adds a shared browser account panel, Three.js startup and Phaser scene-lifecycle wiring, static hosting architecture and troubleshooting guides. The read-only MCP can search and read these guides. Tests cover UI state, stale responses and scene cleanup; rendering engines and a real approved client still need application-level validation.
