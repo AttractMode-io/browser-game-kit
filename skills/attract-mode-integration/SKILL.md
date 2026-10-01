@@ -15,3 +15,5 @@ Read [the integration contract](references/integration.md) before editing. It in
 6. Report what was tested locally, what was tested with real registration and what is still pending. Do not infer authorization for deployment, publication, spending or outreach from installing this skill.
 
 If the request includes achievements, shared XP, payments, entitlements, cloud saves or an in-game community API, explain that this kit does not expose those contracts. Keep proposed adapters clearly separate from working platform integration. Catalog reviews and studio follows exist on attractmode.io; they are not a general public game API.
+
+For Three.js or Phaser projects, consult the kit's `docs/threejs.md` or `docs/phaser.md` and `integrations/` browser helpers. These mount a DOM account panel beside the canvas. They are wiring references with controller/lifecycle tests, not engine-rendering demos or a verified live client pilot. Read `docs/static-frontend.md` before proposing static hosting and `docs/troubleshooting.md` when setup fails. Keep the browser helper on the frontend and the OIDC adapter on the backend.
