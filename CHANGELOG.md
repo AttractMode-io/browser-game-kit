@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.1 - 2026-10-01
+
+- Browser account panel with native same-origin sign-in forms and safe teardown.
+- Three.js startup and Phaser scene lifecycle wiring examples.
+- Static frontend/backend architecture and troubleshooting guides.
+- Tests for panel states, stale responses and scene cleanup. Engine rendering and live client registration remain application-level validation.
+
 ## 0.1.0 · September 29, 2026
 
 Initial standalone public release.

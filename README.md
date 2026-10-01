@@ -8,6 +8,8 @@ A small, playable browser game that shows how to connect an approved third-party
 
 [Developer docs](https://attractmode.io/docs) · [Download ZIP](https://github.com/AttractMode-io/browser-game-kit/releases/latest/download/attract-mode-browser-game-kit.zip) · [Source](https://github.com/AttractMode-io/browser-game-kit) · [Report a bug](https://github.com/AttractMode-io/browser-game-kit/issues)
 
+Attract Mode is a browser-game discovery platform at [attractmode.io](https://attractmode.io). This repository is its MIT-licensed account-integration reference for browser-game developers. Listing a game and connecting its accounts are separate steps; a listing does not register an OAuth client.
+
 ## Play the demo in three commands
 
 Install [Node.js 24 LTS](https://nodejs.org/), then:
@@ -27,6 +29,10 @@ Open **http://127.0.0.1:3000**. Click targets, select **Simulate sign-in (offlin
 | You want to… | Start here |
 | --- | --- |
 | Let a coding agent integrate your existing game | [Agent setup and example prompts](agents/README.md) |
+| Add an account panel to an existing Three.js game | [Three.js wiring example](docs/threejs.md) |
+| Add an account panel to a Phaser scene | [Phaser wiring example](docs/phaser.md) |
+| Keep a static frontend and add an account backend | [Hosting architecture](docs/static-frontend.md) |
+| Fix a setup or sign-in problem | [Troubleshooting](docs/troubleshooting.md) |
 | Understand how sign-in works | [Account integration](docs/account-integration.md) |
 | Connect a real, approved OAuth client | [Go from local demo to real sign-in](docs/go-live.md) |
 | Search the integration contract from an MCP client | [Optional local documentation MCP](mcp/README.md) |
@@ -85,6 +91,7 @@ demo-handler.mjs     Request/Response routes and demo session store
 server.mjs           Loopback development server
 mock-account.mjs     Local signed identity simulation, never a real issuer
 game.mjs             Tiny guest-play target game
+integrations/        Browser account panel and engine lifecycle wiring
 skills/              Portable integration skill
 agents/              Project-local skill installer
 mcp/                 Optional read-only docs tools
