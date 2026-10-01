@@ -14,12 +14,12 @@ async function local(t) {
  t.after(async()=>{await client.close();await server.close();});
  return client;
 }
-test('SDK discovery exposes only three read-only tools and five fixed resources',async t=>{
+test('SDK discovery exposes only three read-only tools and nine fixed resources',async t=>{
  const client=await local(t);
  const {tools}=await client.listTools();
  assert.deepEqual(tools.map(t=>t.name).sort(),['get_capabilities','read_doc','search_docs']);
  for(const tool of tools){assert.equal(tool.annotations.readOnlyHint,true);assert.equal(tool.annotations.openWorldHint,false);}
- const {resources}=await client.listResources(); assert.equal(resources.length,5);
+ const {resources}=await client.listResources(); assert.equal(resources.length,9);
  for(const resource of resources){const result=await client.readResource({uri:resource.uri});assert.ok(result.contents[0].text.length>50);}
 });
 test('capability manifest explicitly bounds production and unavailable APIs',async t=>{
@@ -58,4 +58,12 @@ test('real stdio child completes protocol negotiation and reads docs without sec
  await client.connect(transport);
  const result=await client.callTool({name:'read_doc',arguments:{id:'integration'}});
  assert.match(result.content[0].text,/POST \/auth\/login/);
+});
+
+test('framework and troubleshooting pages are directly readable through the fixed allowlist',async t=>{
+ const client=await local(t);
+ for(const [id,pattern] of [['threejs',/mountThreeAccountUI/],['phaser',/attachPhaserAccountUI/],['static-frontend',/atomic/],['troubleshooting',/Wrong host/]]) {
+  const result=await client.callTool({name:'read_doc',arguments:{id}});
+  assert.match(result.content[0].text,pattern);
+ }
 });

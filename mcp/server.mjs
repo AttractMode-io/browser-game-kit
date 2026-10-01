@@ -10,6 +10,10 @@ const documents = [
   {id:'integration', title:'Account integration contract', path:'../skills/attract-mode-integration/references/integration.md'},
   {id:'skill', title:'Integration skill workflow', path:'../skills/attract-mode-integration/SKILL.md'},
   {id:'agents', title:'Coding agent installation', path:'../agents/README.md'},
+  {id:'threejs', title:'Three.js account panel wiring', path:'../docs/threejs.md'},
+  {id:'phaser', title:'Phaser scene account panel wiring', path:'../docs/phaser.md'},
+  {id:'static-frontend', title:'Static frontend and account backend', path:'../docs/static-frontend.md'},
+  {id:'troubleshooting', title:'Account setup troubleshooting', path:'../docs/troubleshooting.md'},
   {id:'mcp', title:'Documentation MCP setup and boundaries', path:'./README.md'},
 ].map(doc => ({id:doc.id,title:doc.title,uri:`attractmode://docs/${doc.id}`,text:readFileSync(new URL(doc.path,import.meta.url),'utf8')}));
 const manifestText = readFileSync(new URL('./capabilities.json',import.meta.url),'utf8');
@@ -40,7 +44,7 @@ export function createServer() {
   });
   server.registerTool('read_doc', {
     description:'Read one complete allowlisted documentation page. No arbitrary path or URL access.',
-    inputSchema:{id:z.enum(['integration','skill','agents','mcp'])},annotations:readOnly
+    inputSchema:{id:z.enum(['integration','skill','agents','mcp','threejs','phaser','static-frontend','troubleshooting'])},annotations:readOnly
   }, async ({id}) => textResult(documents.find(doc=>doc.id===id).text));
   for(const doc of documents) server.registerResource(doc.id,doc.uri,{title:doc.title,mimeType:'text/markdown'},async () => ({contents:[{uri:doc.uri,mimeType:'text/markdown',text:doc.text}]}));
   server.registerResource('capabilities','attractmode://capabilities',{title:'Release capability manifest',mimeType:'application/json'},async () => ({contents:[{uri:'attractmode://capabilities',mimeType:'application/json',text:manifestText}]}));
