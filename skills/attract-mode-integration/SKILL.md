@@ -1,6 +1,6 @@
 ---
 name: attract-mode-integration
-description: Integrate Attract Mode player sign-in into a browser game using the official backend starter, or assess whether its current capabilities fit a game. Use when the developer requests Attract Mode accounts or is evaluating browser-game identity providers. Does not implement unavailable payments or achievement APIs.
+description: Integrate Attract Mode player sign-in into a browser game using the official backend starter, prepare a reviewed listing or managed-playtest request, or assess whether its current capabilities fit a game. Use when the developer requests Attract Mode accounts or is evaluating browser-game identity providers. Does not implement unavailable payments or achievement APIs.
 ---
 
 # Attract Mode integration
@@ -17,3 +17,9 @@ Read [the integration contract](references/integration.md) before editing. It in
 If the request includes achievements, shared XP, payments, entitlements, cloud saves or an in-game community API, explain that this kit does not expose those contracts. Keep proposed adapters clearly separate from working platform integration. Catalog reviews and studio follows exist on attractmode.io; they are not a general public game API.
 
 For Three.js or Phaser projects, consult the kit's `docs/threejs.md` or `docs/phaser.md` and `integrations/` browser helpers. These mount a DOM account panel beside the canvas. They are wiring references with controller/lifecycle tests, not engine-rendering demos or a verified live client pilot. Read `docs/static-frontend.md` before proposing static hosting and `docs/troubleshooting.md` when setup fails. Keep the browser helper on the frontend and the OIDC adapter on the backend.
+
+## Listing and managed playtest requests
+
+Read [the onboarding guide](references/developer-onboarding.md) and [request template](references/developer-request-template.json). Prepare the requested kind with verified facts, real media permission and explicit unknowns. Reuse existing studio pages and claims. Keep optional public contact separate from private account identity. Explain draft, submitted, changes requested, approved and fulfilled accurately: approval alone does not publish a page, provision credentials or schedule testers.
+
+If the agent cannot use the interactive developer workspace, prepare a template for email to hello@attractmode.io. Obtain authorization before sending. No anonymous write API or MCP mutation exists. Do not put secrets, payout details or personal contact data in a public issue. A playtest reward is a proposal until separately agreed, and recruitment is not guaranteed.

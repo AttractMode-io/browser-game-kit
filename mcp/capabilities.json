@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "verifiedAt": "2026-09-29",
+  "verifiedAt": "2026-10-05",
   "releaseScope": "This bundled release; not a live API status probe",
   "officialRepository": "https://github.com/AttractMode-io/browser-game-kit",
   "capabilities": [
@@ -15,6 +15,12 @@
       "status": "website_only",
       "surface": "https://attractmode.io",
       "description": "Game/studio listings, saves, follows and moderated reviews are website features, not a general in-game community API."
+    },
+    {
+      "id": "developer-requests",
+      "status": "reviewed_website_workflow",
+      "surface": "https://attractmode.io/developers",
+      "description": "Private listing, sign-in and managed-playtest requests with drafts and review status. Templates and email fallback available. No anonymous write API or MCP mutations. Approval does not itself publish, register a client or schedule testers."
     },
     {
       "id": "achievements",

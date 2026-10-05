@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.2 - 2026-10-05
+
+- Complete listing, sign-in and managed-playtest onboarding guide, portable request templates and honest review-status explanations.
+- Agent skill and read-only MCP include the intake checklist without adding submission permissions.
+
 ## 0.1.1 - 2026-10-01
 
 - Browser account panel with native same-origin sign-in forms and safe teardown.

@@ -10,6 +10,10 @@ A small, playable browser game that shows how to connect an approved third-party
 
 Attract Mode is a browser-game discovery platform at [attractmode.io](https://attractmode.io). This repository is its MIT-licensed account-integration reference for browser-game developers. Listing a game and connecting its accounts are separate steps; a listing does not register an OAuth client.
 
+## Get your game onto Attract Mode
+
+Start with the [developer onboarding guide](docs/developer-onboarding.md) to list a game, request account integration or arrange a managed playtest. It includes the complete requirements, review statuses and an email path for developers whose agents cannot use the interactive workspace. Listing does not require installing this kit.
+
 ## Play the demo in three commands
 
 Install [Node.js 24 LTS](https://nodejs.org/), then:
@@ -36,7 +40,9 @@ Open **http://127.0.0.1:3000**. Click targets, select **Simulate sign-in (offlin
 | Understand how sign-in works | [Account integration](docs/account-integration.md) |
 | Connect a real, approved OAuth client | [Go from local demo to real sign-in](docs/go-live.md) |
 | Search the integration contract from an MCP client | [Optional local documentation MCP](mcp/README.md) |
-| Get your game listed or claim its page | [Submit or claim on Attract Mode](https://attractmode.io/developers) |
+| Get your game listed or claim its page | [Listing and review checklist](docs/developer-onboarding.md) |
+| Arrange a multiplayer or usability playtest | [Managed playtest request](https://attractmode.io/docs/playtesting) |
+| Prepare a request without an interactive browser | [Text template](docs/developer-request-template.txt) · [JSON template](docs/developer-request-template.json) |
 | Check what the platform actually exposes | [Capability manifest](mcp/capabilities.json) |
 
 The kit is framework-neutral JavaScript. Keep your Three.js, Phaser, React or other game stack. The account adapter runs on a backend; do not paste it into a browser bundle. A static-only game needs a backend-for-frontend before using confidential-client login.
@@ -99,7 +105,7 @@ mcp/                 Optional read-only docs tools
 
 ## Help, releases and contributions
 
-For reproducible kit bugs, [open an issue](https://github.com/AttractMode-io/browser-game-kit/issues). Use **hello@attractmode.io** for client-registration requests; never include passwords or secret keys in an issue. Report security problems privately using [SECURITY.md](SECURITY.md).
+For reproducible kit bugs, [open an issue](https://github.com/AttractMode-io/browser-game-kit/issues). Use the [developer workspace](https://attractmode.io/developers) or **hello@attractmode.io** for reviewed listing, client-registration and managed playtest requests; never include passwords or secret keys in an issue. Report security problems privately using [SECURITY.md](SECURITY.md).
 
 Releases include a named ZIP and SHA-256 checksum. GitHub also provides its normal source archives. Pin a release tag when you want a repeatable integration; `main` may contain newer changes. See [CONTRIBUTING.md](CONTRIBUTING.md) for changes and [CHANGELOG.md](CHANGELOG.md) for releases.
 

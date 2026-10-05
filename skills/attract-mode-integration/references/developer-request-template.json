@@ -1,0 +1,313 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Prepare a private reviewed request, not an API call or automatic publication.",
+  "workspace": "https://attractmode.io/developers",
+  "emailFallback": "hello@attractmode.io",
+  "privacy": "Never include secrets, passwords, payment details or player data. public_contact is optional and intended for publication; account email is not public contact.",
+  "instructions": "Complete only the relevant kind. Save incomplete work as a draft. For email, send the completed kind with a subject naming your game. Unknown facts should remain unknown with notes. No anonymous write API or MCP submission tool exists.",
+  "requests": {
+    "listing": {
+      "fields": {
+        "game_name": "",
+        "studio_name": "",
+        "game_url": "",
+        "description": "",
+        "genres": "",
+        "devices": "",
+        "controls": "",
+        "access_requirements": "",
+        "official_url": "",
+        "media_urls": "",
+        "media_credit": "",
+        "media_permission": "",
+        "public_contact": "",
+        "notes": ""
+      },
+      "definitions": [
+        {
+          "name": "game_name",
+          "label": "Game name",
+          "type": "text",
+          "maxLength": 120,
+          "required": true
+        },
+        {
+          "name": "studio_name",
+          "label": "Developer or studio",
+          "type": "text",
+          "maxLength": 120,
+          "required": true
+        },
+        {
+          "name": "game_url",
+          "label": "Playable game URL",
+          "type": "url",
+          "maxLength": 1000,
+          "required": true
+        },
+        {
+          "name": "description",
+          "label": "What players do and what makes it interesting",
+          "type": "textarea",
+          "maxLength": 4000,
+          "required": true
+        },
+        {
+          "name": "genres",
+          "label": "Genres and specific mechanics",
+          "type": "text",
+          "maxLength": 500,
+          "required": true
+        },
+        {
+          "name": "devices",
+          "label": "Supported devices and browsers",
+          "type": "textarea",
+          "maxLength": 2000,
+          "required": true
+        },
+        {
+          "name": "controls",
+          "label": "Controls",
+          "type": "textarea",
+          "maxLength": 2000,
+          "required": true
+        },
+        {
+          "name": "access_requirements",
+          "label": "Account, price and access requirements",
+          "type": "textarea",
+          "maxLength": 2000,
+          "required": true
+        },
+        {
+          "name": "official_url",
+          "label": "Official developer website or profile",
+          "type": "url",
+          "maxLength": 1000,
+          "required": true
+        },
+        {
+          "name": "media_urls",
+          "label": "Screenshot or press-kit URLs, one per line",
+          "type": "urls",
+          "maxLength": 5000,
+          "required": true
+        },
+        {
+          "name": "media_credit",
+          "label": "Image credit and source",
+          "type": "textarea",
+          "maxLength": 2000,
+          "required": true
+        },
+        {
+          "name": "media_permission",
+          "label": "Permission to use the submitted images",
+          "type": "select",
+          "maxLength": 40,
+          "required": true,
+          "options": [
+            "owned",
+            "permission_granted",
+            "press_kit"
+          ]
+        },
+        {
+          "name": "public_contact",
+          "label": "Optional public business contact",
+          "type": "text",
+          "maxLength": 200,
+          "required": false
+        },
+        {
+          "name": "notes",
+          "label": "Anything else we should know",
+          "type": "textarea",
+          "maxLength": 2000,
+          "required": false
+        }
+      ]
+    },
+    "sign_in": {
+      "fields": {
+        "game_name": "",
+        "studio_name": "",
+        "game_url": "",
+        "production_origin": "",
+        "redirect_uris": "",
+        "server_stack": "",
+        "sign_in_goal": "",
+        "ownership_evidence": "",
+        "notes": ""
+      },
+      "definitions": [
+        {
+          "name": "game_name",
+          "label": "Game name",
+          "type": "text",
+          "maxLength": 120,
+          "required": true
+        },
+        {
+          "name": "studio_name",
+          "label": "Developer or studio",
+          "type": "text",
+          "maxLength": 120,
+          "required": true
+        },
+        {
+          "name": "game_url",
+          "label": "Playable game URL",
+          "type": "url",
+          "maxLength": 1000,
+          "required": true
+        },
+        {
+          "name": "production_origin",
+          "label": "Production origin",
+          "type": "origin",
+          "maxLength": 1000,
+          "required": true
+        },
+        {
+          "name": "redirect_uris",
+          "label": "Exact HTTPS callback URLs, one per line",
+          "type": "urls",
+          "maxLength": 5000,
+          "required": true
+        },
+        {
+          "name": "server_stack",
+          "label": "Server framework and hosting",
+          "type": "textarea",
+          "maxLength": 2000,
+          "required": true
+        },
+        {
+          "name": "sign_in_goal",
+          "label": "What sign-in should enable",
+          "type": "textarea",
+          "maxLength": 2000,
+          "required": true
+        },
+        {
+          "name": "ownership_evidence",
+          "label": "Official sources demonstrating control of the game",
+          "type": "textarea",
+          "maxLength": 2000,
+          "required": true
+        },
+        {
+          "name": "notes",
+          "label": "Anything else we should know",
+          "type": "textarea",
+          "maxLength": 2000,
+          "required": false
+        }
+      ]
+    },
+    "playtest": {
+      "fields": {
+        "game_name": "",
+        "studio_name": "",
+        "game_url": "",
+        "goals": "",
+        "devices": "",
+        "access_requirements": "",
+        "simultaneous_players": "",
+        "session_minutes": "",
+        "timing": "",
+        "timezone": "",
+        "reward": "",
+        "notes": ""
+      },
+      "definitions": [
+        {
+          "name": "game_name",
+          "label": "Game name",
+          "type": "text",
+          "maxLength": 120,
+          "required": true
+        },
+        {
+          "name": "studio_name",
+          "label": "Developer or studio",
+          "type": "text",
+          "maxLength": 120,
+          "required": true
+        },
+        {
+          "name": "game_url",
+          "label": "Playable game URL",
+          "type": "url",
+          "maxLength": 1000,
+          "required": true
+        },
+        {
+          "name": "goals",
+          "label": "Questions you want players to answer",
+          "type": "textarea",
+          "maxLength": 4000,
+          "required": true
+        },
+        {
+          "name": "devices",
+          "label": "Devices and browsers to test",
+          "type": "textarea",
+          "maxLength": 2000,
+          "required": true
+        },
+        {
+          "name": "access_requirements",
+          "label": "Account and access requirements",
+          "type": "textarea",
+          "maxLength": 2000,
+          "required": true
+        },
+        {
+          "name": "simultaneous_players",
+          "label": "Players needed at the same time",
+          "type": "text",
+          "maxLength": 100,
+          "required": true
+        },
+        {
+          "name": "session_minutes",
+          "label": "Expected session length in minutes",
+          "type": "text",
+          "maxLength": 100,
+          "required": true
+        },
+        {
+          "name": "timing",
+          "label": "Preferred dates and time windows",
+          "type": "textarea",
+          "maxLength": 2000,
+          "required": true
+        },
+        {
+          "name": "timezone",
+          "label": "Time zone",
+          "type": "text",
+          "maxLength": 100,
+          "required": true
+        },
+        {
+          "name": "reward",
+          "label": "Proposed reward or unpaid test; subject to agreement",
+          "type": "textarea",
+          "maxLength": 2000,
+          "required": true
+        },
+        {
+          "name": "notes",
+          "label": "Anything else we should know",
+          "type": "textarea",
+          "maxLength": 2000,
+          "required": false
+        }
+      ]
+    }
+  }
+}

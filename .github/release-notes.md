@@ -1,10 +1,19 @@
-Run a playable offline game and test account sign-in without credentials. Includes the backend OIDC adapter, Codex/Claude/Cursor/Gemini skills, optional read-only docs MCP, and deployment/security guidance.
+Get your browser game listed, prepare real Attract Mode sign-in, or request a focused managed playtest with a clear next step.
 
-Download **attract-mode-browser-game-kit.zip**, extract it, and run `npm ci --ignore-scripts` then `npm run dev`. Open the printed local URL. Node24 or later is required. SHA256SUMS.txt records the archive checksum.
+This update adds:
 
-This release's default login is a clearly labeled simulation. Real Attract Mode accounts require a separately approved OAuth client and HTTPS callback. The supplied development server uses memory and refuses production mode; follow the durable-storage checklist before deployment. No achievement, shared XP, payment or cloud-save API is provided.
+- A developer onboarding guide covering listing, ownership, account integration and managed playtests as separate reviewed paths.
+- Downloadable text and JSON request templates, including screenshots and media permission, exact callbacks, and multiplayer session requirements.
+- An email fallback to hello@attractmode.io when an agent cannot use the interactive workspace.
+- Review-status explanations, public-contact privacy guidance and a clear distinction between approval and actual delivery.
+- Updated Codex, Claude Code, Cursor and Gemini CLI skill references. The optional read-only documentation MCP can read the onboarding guide and request template; it cannot submit requests or operate accounts.
+
+Download **attract-mode-browser-game-kit.zip**, extract it, run `npm ci --ignore-scripts` and `npm run dev`, then open the printed local URL. Node.js 24 or later is required. **SHA256SUMS.txt** contains the archive checksum.
+
+The default login remains an offline simulation. Real accounts require separately approved client registration, exact HTTPS callbacks, player consent and a production backend with durable transaction storage. The sample development server refuses production mode. No achievement, shared XP, payment or cloud-save API is included.
+
+A listing request does not grant ownership, a sign-in request does not issue credentials, and a playtest request does not recruit testers or authorize payment. Read the workspace review notes and fulfillment record for the actual outcome.
 
 Source: https://github.com/AttractMode-io/browser-game-kit
 Docs: https://attractmode.io/docs
-
-This update adds a shared browser account panel, Three.js startup and Phaser scene-lifecycle wiring, static hosting architecture and troubleshooting guides. The read-only MCP can search and read these guides. Tests cover UI state, stale responses and scene cleanup; rendering engines and a real approved client still need application-level validation.
+Workspace: https://attractmode.io/developers

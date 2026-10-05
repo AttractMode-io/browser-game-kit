@@ -30,6 +30,12 @@ For review:
 
 > Review our Attract Mode integration against the skill's contract. Trace secrets, callback validation, durable one-use transaction storage and session lifecycle. Give me concrete fixes and run the relevant tests. Do not contact Attract Mode or deploy anything.
 
+## Prepare a game submission or playtest request
+
+> Read docs/developer-onboarding.md and the bundled request template. Prepare a listing request for my game using only verified facts and screenshots we may publish. Keep personal contact information private unless I explicitly mark it public. Show me the draft and missing information. Do not submit or email it yet.
+
+For sign-in or playtests, select that request kind instead. A multiplayer playtest should state simultaneous-player requirements, room joining, timezone, session length and specific questions. The review workflow does not guarantee testers or approve payments.
+
 ## Optional local MCP
 
 The [documentation MCP](../mcp/README.md) lets an MCP-capable agent search this release's bundled contract and read an explicit capability manifest without loading all the docs up front. It cannot register clients, read accounts, change listings or grant achievements. It is optional; the skill and mock work without it.

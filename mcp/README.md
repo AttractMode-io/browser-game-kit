@@ -52,6 +52,8 @@ Restart/reconnect and check that `get_capabilities`, `search_docs` and `read_doc
 | search_docs | query, 1–160 characters | Up to eight relevant paragraphs from four fixed documents. |
 | read_doc | integration, skill, agents or mcp | One bundled page. |
 
+The `onboarding` document explains listing, sign-in and managed-playtest intake. The `request-template` document supplies the offline checklist; it cannot submit anything.
+
 The same pages are MCP resources under `attractmode://docs/…`. `attractmode://capabilities` contains the JSON capability manifest. These are MCP resource identifiers, not HTTP services. Search covers this downloaded release, not the live site's game catalog. Update the kit to get newer documentation.
 
 ## Security boundary

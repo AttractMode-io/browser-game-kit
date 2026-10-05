@@ -1,0 +1,86 @@
+ATTRACT MODE DEVELOPER REQUEST
+
+Complete only the relevant kind. Save incomplete work as a draft. For email, send the completed kind with a subject naming your game. Unknown facts should remain unknown with notes. No anonymous write API or MCP submission tool exists.
+
+Send to: hello@attractmode.io
+Workspace: https://attractmode.io/developers
+
+Never include secrets, passwords, payment details or player data. public_contact is optional and intended for publication; account email is not public contact.
+
+REQUEST KIND: listing
+Game name [game_name] (required before submission; maximum 120 characters):
+
+Developer or studio [studio_name] (required before submission; maximum 120 characters):
+
+Playable game URL [game_url] (required before submission; maximum 1000 characters):
+
+What players do and what makes it interesting [description] (required before submission; maximum 4000 characters):
+
+Genres and specific mechanics [genres] (required before submission; maximum 500 characters):
+
+Supported devices and browsers [devices] (required before submission; maximum 2000 characters):
+
+Controls [controls] (required before submission; maximum 2000 characters):
+
+Account, price and access requirements [access_requirements] (required before submission; maximum 2000 characters):
+
+Official developer website or profile [official_url] (required before submission; maximum 1000 characters):
+
+Screenshot or press-kit URLs, one per line [media_urls] (required before submission; maximum 5000 characters):
+
+Image credit and source [media_credit] (required before submission; maximum 2000 characters):
+
+Permission to use the submitted images [media_permission] (required before submission; maximum 40 characters; choose owned / permission_granted / press_kit):
+
+Optional public business contact [public_contact] (optional; maximum 200 characters):
+
+Anything else we should know [notes] (optional; maximum 2000 characters):
+
+
+REQUEST KIND: sign_in
+Game name [game_name] (required before submission; maximum 120 characters):
+
+Developer or studio [studio_name] (required before submission; maximum 120 characters):
+
+Playable game URL [game_url] (required before submission; maximum 1000 characters):
+
+Production origin [production_origin] (required before submission; maximum 1000 characters):
+
+Exact HTTPS callback URLs, one per line [redirect_uris] (required before submission; maximum 5000 characters):
+
+Server framework and hosting [server_stack] (required before submission; maximum 2000 characters):
+
+What sign-in should enable [sign_in_goal] (required before submission; maximum 2000 characters):
+
+Official sources demonstrating control of the game [ownership_evidence] (required before submission; maximum 2000 characters):
+
+Anything else we should know [notes] (optional; maximum 2000 characters):
+
+
+REQUEST KIND: playtest
+Game name [game_name] (required before submission; maximum 120 characters):
+
+Developer or studio [studio_name] (required before submission; maximum 120 characters):
+
+Playable game URL [game_url] (required before submission; maximum 1000 characters):
+
+Questions you want players to answer [goals] (required before submission; maximum 4000 characters):
+
+Devices and browsers to test [devices] (required before submission; maximum 2000 characters):
+
+Account and access requirements [access_requirements] (required before submission; maximum 2000 characters):
+
+Players needed at the same time [simultaneous_players] (required before submission; maximum 100 characters):
+
+Expected session length in minutes [session_minutes] (required before submission; maximum 100 characters):
+
+Preferred dates and time windows [timing] (required before submission; maximum 2000 characters):
+
+Time zone [timezone] (required before submission; maximum 100 characters):
+
+Proposed reward or unpaid test; subject to agreement [reward] (required before submission; maximum 2000 characters):
+
+Anything else we should know [notes] (optional; maximum 2000 characters):
+
+
+Approval does not itself publish a page, register an OAuth client, recruit testers or commit payments. Read the review note and fulfillment outcome.
