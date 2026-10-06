@@ -1,6 +1,6 @@
 {
   "name": "@attractmode/browser-game-kit",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "A runnable browser game with a server-side Attract Mode account integration",
@@ -15,9 +15,11 @@
     "doctor": "node tooling/doctor.mjs",
     "test:release": "node tooling/release-smoke.mjs",
     "sandbox:prepare": "node sandbox/prepare.mjs",
-    "sandbox:start": "supabase start --workdir sandbox -x studio,imgproxy,mailpit,storage-api,realtime,edge-runtime,logflare,vector,supavisor",
+    "sandbox:start": "node sandbox/start.mjs",
     "test:sandbox": "node sandbox/protocol-test.mjs",
-    "sandbox:stop": "supabase stop --workdir sandbox"
+    "sandbox:stop": "supabase stop --workdir sandbox",
+    "sandbox:dev": "node sandbox/dev.mjs",
+    "start:production": "node --env-file=.env.production server.mjs --connected"
   },
   "dependencies": {
     "openid-client": "6.8.8",
@@ -47,6 +49,9 @@
     "./phaser": "./integrations/phaser.mjs",
     "./server": {
       "node": "./account-client.mjs"
+    },
+    "./session-store": {
+      "node": "./session-store.mjs"
     }
   }
 }

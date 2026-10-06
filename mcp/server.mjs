@@ -7,6 +7,7 @@ import {z} from 'zod';
 
 // Fixed package assets only. Client input never becomes a path, URL or shell command.
 const documents = [
+  {id:'production-storage', title:'Encrypted single-host production sessions', path:'../docs/production-storage.md'},
   {id:'local-sandbox', title:'Real isolated local OAuth protocol tests', path:'../docs/local-sandbox.md'},
   {id:'diagnostics', title:'Redacted integration diagnostics', path:'../docs/diagnostics.md'},
   {id:'package-boundaries', title:'Browser and server package boundaries', path:'../docs/package-boundaries.md'},
@@ -49,7 +50,7 @@ export function createServer() {
   });
   server.registerTool('read_doc', {
     description:'Read one complete allowlisted documentation page. No arbitrary path or URL access.',
-    inputSchema:{id:z.enum(['local-sandbox','diagnostics','package-boundaries','onboarding','request-template','integration','skill','agents','mcp','threejs','phaser','static-frontend','troubleshooting'])},annotations:readOnly
+    inputSchema:{id:z.enum(['production-storage','local-sandbox','diagnostics','package-boundaries','onboarding','request-template','integration','skill','agents','mcp','threejs','phaser','static-frontend','troubleshooting'])},annotations:readOnly
   }, async ({id}) => textResult(documents.find(doc=>doc.id===id).text));
   for(const doc of documents) server.registerResource(doc.id,doc.uri,{title:doc.title,mimeType:'text/markdown'},async () => ({contents:[{uri:doc.uri,mimeType:'text/markdown',text:doc.text}]}));
   server.registerResource('capabilities','attractmode://capabilities',{title:'Release capability manifest',mimeType:'application/json'},async () => ({contents:[{uri:'attractmode://capabilities',mimeType:'application/json',text:manifestText}]}));

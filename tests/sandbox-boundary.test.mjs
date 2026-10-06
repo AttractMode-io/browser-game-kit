@@ -8,3 +8,6 @@ test('connected entry never accepts arbitrary issuer selection from caller',asyn
  // Missing required registration fails before any discovery or untrusted network operation.
  await assert.rejects(configureAccountClient({expectedIssuer:'http://127.0.0.1:56421/auth/v1'}),/registration/);
 });
+test('production low-level factory cannot omit registry enforcement',()=>{
+ assert.throws(()=>createAccountClient({redirectUri:'https://game.example/auth/callback'}),/registry validation/);
+});

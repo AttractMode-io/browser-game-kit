@@ -6,7 +6,7 @@ This kit is pre-1.0. Use the latest release and review its changelog; no respons
 
 ## Scope
 
-The code demonstrates OIDC with a pinned issuer and backend-only tokens. The included development server uses temporary memory and refuses production mode. The local MCP has no network listener, write tools or credentials. Skill installation is project-scoped and refuses overwrite.
+The code demonstrates OIDC with a pinned issuer and backend-only tokens. Default development uses temporary memory. Production requires the encrypted single-host SQLite store and an approved connected client; see docs/production-storage.md. The local MCP has no network listener, write tools or credentials. Skill installation is project-scoped and refuses overwrite.
 
 Connected development requires credentials issued for your own registered client. Never publish `.env`, tokens, cookies, PKCE verifiers or client secrets. Rotate a credential through its issuer if it is exposed; deleting a Git commit does not revoke it.
 

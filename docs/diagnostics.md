@@ -26,7 +26,7 @@ Output is structured JSON with fixed codes and instructions. It deliberately omi
 | PLAYER_ID_KEY | Generate and securely persist a server-only random key; changing it changes player IDs. |
 | CALLBACK_FORMAT | Use the registered HTTPS `/auth/callback`, without extra query parameters. |
 | REGISTRATION_REVIEW | Compare the exact URL and game registration in the developer workspace. |
-| PRODUCTION_HOSTING | Replace the development server and in-memory store before deployment. |
+| PRODUCTION_HOSTING | Configure the private persistent SQLite store and session key, or use a reviewed shared adapter. |
 | PUBLIC_CONNECTIVITY | Retry connectivity separately; let guest gameplay continue. |
 
 ## Safe retries and cancellation
@@ -35,6 +35,6 @@ The browser panel gives session lookups five seconds, cancels a superseded looku
 
 ## Environment status
 
-The bundled offline mode is a signed identity simulation. It is not a hosted integration sandbox. Connected mode pins the official production issuer and requires reviewed registration. Unsupported environment values fail closed. Do not use real player credentials in fixtures or present local test identities as production accounts.
+The default offline mode is a signed identity simulation. The optional Docker sandbox provides a separate real local provider and human consent UI. It is not a hosted integration sandbox. Connected mode pins the official production issuer and requires reviewed registration. Unsupported environment values fail closed. Do not use real player credentials in fixtures or present local test identities as production accounts.
 
 For actual local provider integration rather than simulation, follow [the Docker/Supabase sandbox guide](local-sandbox.md). Doctor does not start Docker or mutate sandbox records.

@@ -5,6 +5,7 @@ import * as oidc from 'openid-client';
 import {
   createAccountClient,
   issuer,
+  derivePlayerId,
 } from '../account-client.mjs';
 import {
   createDemoHandler,
@@ -87,6 +88,7 @@ function fixture() {
   };
   const client = createAccountClient({
     configuration,
+    registrationCheck:async()=>({gameId:'fixture-game',environment:'production'}),playerIdKey:'k'.repeat(32),
     redirectUri: 'https://game.example/auth/callback',
     clock: () => now,
   });
@@ -148,7 +150,7 @@ test('browser-game kit completes local mocked OIDC flow, keeps tokens server-onl
   const me = await f.request('/api/me', { headers: { cookie: session } });
   assert.deepEqual(await me.json(), {
     signedIn: true,
-    account: { issuer, subject: 'existing-attract-mode-subject' },
+    account: { playerId:derivePlayerId('k'.repeat(32),{gameId:'fixture-game',environment:'production'},'existing-attract-mode-subject'),gameId:'fixture-game',environment:'production' },
   });
   assert.equal(me.headers.get('cache-control'), 'no-store');
   assert.equal(
@@ -203,6 +205,7 @@ test('kit rejects wrong browser/state, expiry, cancellation and duplicate callba
 test('kit validates ID token issuer, audience, nonce, expiry and signature', async () => {
   for (const variant of [
     { iss: 'https://evil.example' },
+    { iss: 'http://127.0.0.1:56421/auth/v1' },
     { aud: 'other-client' },
     { nonce: 'wrong' },
     { exp: 1 },

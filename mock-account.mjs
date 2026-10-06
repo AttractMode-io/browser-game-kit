@@ -28,7 +28,7 @@ export function createMockAccount() {
     const signature = sign('sha256', Buffer.from(input), { key:pair.privateKey, dsaEncoding:'ieee-p1363' }).toString('base64url');
     return Response.json({ access_token:'offline-only', token_type:'Bearer', expires_in:300, id_token:input+'.'+signature });
   };
-  const client = createAccountClient({ configuration, redirectUri:mockOrigin+'/auth/callback' });
+  const client = createAccountClient({ registrationCheck:async()=>({gameId:'offline-demo',environment:'simulation'}),playerIdKey:'offline-fixture-key-not-a-secret-12345',configuration, redirectUri:mockOrigin+'/auth/callback' });
   return { client,
     authorize(url) {
       const params = new URL(url).searchParams;

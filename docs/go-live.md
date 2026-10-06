@@ -22,13 +22,13 @@ The adapter uses the existing Attract Mode issuer's discovery metadata. The call
 
 Import `configureAccountClient` and `createDemoHandler`; the integration guide shows the concrete interface. Serve the game with your framework and retain the backend account routes. Retain `(issuer, subject)` only in trusted backend identity records; use the derived `playerId` for game-facing records. The persistent key and game/environment namespace keep that ID stable and scoped. Keep email-based legacy account linking separate and require explicit proof of both accounts.
 
-Replace the demo Map with durable TTL storage implementing `set`, `get` and **atomic one-use `take`** before production. Store transaction state, nonce and PKCE verifier server-side with a ten-minute expiry. A get-then-delete sequence is not atomic across workers. Encrypt sensitive data at rest, use trusted clocks and never log raw transaction, cookie or token contents.
+Use the included [single-host encrypted SQLite store](production-storage.md), or a reviewed shared store implementing `set`, `get` and **atomic one-use `take`** before production. Store transaction state, nonce and PKCE verifier server-side with a ten-minute expiry. A get-then-delete sequence is not atomic across workers. Encrypt sensitive data at rest, use trusted clocks and never log raw transaction, cookie or token contents.
 
 Serve the game HTML with a referrer policy such as `strict-origin`, which omits URL paths while preserving a valid Origin on same-origin form POSTs. Chromium can send `Origin: null` for forms from a `no-referrer` document. Do not weaken CSRF checks to accept a null origin; the kit keeps private callback/API responses on `no-referrer`.
 
 Set per-client/browser abuse limits and request-size/time limits in your hosting layer. Use Secure, HttpOnly, SameSite=Lax host cookies on the exact game origin, origin checks for mutations, no-store private responses and HTTPS. The sample game session lasts no longer than one hour or the identity token expiry, whichever comes first. Arrange revocation and deletion handling as part of registration. Local sign-out ends the game session only.
 
-The supplied server intentionally fails under `NODE_ENV=production` until you write the production adapter. Do not bypass that guard and call the in-memory sample a production deployment.
+The supplied server fails production startup without connected mode, a private persistent database path and a session-encryption key. Follow the production-storage guide; ephemeral hosting is not supported by the SQLite adapter.
 
 ## 5. Verify before asking for the connected label
 

@@ -14,7 +14,13 @@
       "id": "local-oauth-sandbox",
       "status": "local_development",
       "surface": "npm run test:sandbox",
-      "description": "Docker and Supabase CLI run an isolated real OAuth protocol test with disposable local users and clients. Not a hosted sandbox or a production client pilot."
+      "description": "Docker and Supabase CLI provide isolated real OAuth protocol tests and human consent with disposable local identities. Not a hosted service or production pilot."
+    },
+    {
+      "id": "launch-configuration",
+      "status": "reviewed_configuration",
+      "surface": "https://attractmode.io/developers?task=sign_in",
+      "description": "Saved per-game configuration and diagnostics; independent registration approval required. No self-service production credentials or MCP mutations."
     },
     {
       "id": "diagnostics",
@@ -76,5 +82,24 @@
       "surface": null,
       "description": "No supported third-party API contract shipped in this release."
     }
-  ]
+  ],
+  "kitVersion": "0.2.0",
+  "launchConfiguration": {
+    "status": "reviewed_configuration",
+    "workspace": "https://attractmode.io/developers?task=sign_in",
+    "runtimeAccessRequiresApproval": true,
+    "selfServiceCredentials": false,
+    "diagnosticsScope": "saved_configuration_only"
+  },
+  "localOAuthSandbox": {
+    "status": "local_protocol_sandbox",
+    "documentation": "https://github.com/AttractMode-io/browser-game-kit/blob/main/docs/local-sandbox.md",
+    "requires": [
+      "Docker Desktop",
+      "Supabase CLI",
+      "Node.js 24"
+    ],
+    "hostedService": false,
+    "productionCredentialsRequired": false
+  }
 }

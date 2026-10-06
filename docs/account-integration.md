@@ -2,7 +2,7 @@
 
 A backend adapter for **optional third-party Attract Mode sign-in**, adapted from False Start's existing `openid-client` integration. It uses the current Attract Mode issuer and discovered endpoints. It does not create a second Attract Mode account, register a client, enable first-party consent bypass or imply that your integration has been approved.
 
-The smallest scope is `openid`: this sample needs a stable account subject, not email. Use `(issuer, subject)` as the game-account key. Request `profile` only for a concrete approved display-name/avatar need; request email only when separately justified. Never merge an existing game account merely because its email matches.
+The smallest scope is `openid`: this sample needs a stable account subject, not email. Keep `(issuer, subject)` in trusted backend identity records and use the derived game-scoped `playerId` for game data. Request `profile` only for a concrete approved display-name/avatar need; request email only when separately justified. Never merge an existing game account merely because its email matches.
 
 ## Run and test locally
 
@@ -39,7 +39,9 @@ import {createDemoHandler} from './demo-handler.mjs';
 const client = await configureAccountClient({
   clientId: process.env.AM_GAME_CLIENT_ID,
   clientSecret: process.env.AM_GAME_CLIENT_SECRET,
-  redirectUri: 'https://your-registered-game.example/auth/callback'
+  redirectUri: 'https://your-registered-game.example/auth/callback',
+  gameId: process.env.AM_GAME_ID,
+  playerIdKey: process.env.AM_PLAYER_ID_KEY
 });
 const handle = createDemoHandler({client, store: productionStore});
 // Pass real Request objects for the game's /auth/* and /api/me routes.
@@ -49,14 +51,14 @@ The concrete server handler has these routes:
 
 - `POST /auth/login`: exact Origin required, creates a random state/nonce/PKCE verifier in a ten-minute transaction, binds it to a Secure HttpOnly SameSite=Lax host cookie, redirects to the discovered authorization endpoint. Start with a same-origin HTML form or fetch, not an iframe or a script that grabs account cookies.
 - `GET /auth/callback`: exact registered URL, single parameters, correct browser binding/state and expiry; consumes the transaction atomically before exchanging the code. The library verifies issuer, audience, nonce, expiry and ES256 signature against issuer keys. Tokens remain inside the backend adapter.
-- `GET /api/me`: reads the game's opaque session cookie and returns only that account's stable issuer/subject. It never returns access/refresh/ID tokens.
+- `GET /api/me`: reads the game's opaque session cookie and returns only its derived playerId, gameId and environment. It never returns access/refresh/ID tokens.
 - `POST /auth/logout`: exact Origin required; removes only this game's session. It does not log the player out of Attract Mode or other games.
 
 The sample game session expires at the earlier of the ID-token expiry and one hour. After it expires, start a new authorization flow. Attract Mode may already have the player's session, but **third-party authorization remains explicit**. Do not add `prompt=none`, an internal consent bypass, password collection or cross-domain cookie access.
 
 ### Production store and deployment requirements
 
-The provided bounded in-memory store is for tests/demo only. Implement `set(key,value,expires)`, `get(key)` and **atomic one-use `take(key)`** in server-only durable TTL storage before deploying. Use consistent clocks, encrypted sensitive transaction storage, no request/body/token logging, trusted HTTPS proxy configuration and a deployment-specific secret system. Keep secure cookies on the exact game origin. Never expose the client secret or verifier to a bundle, URL, localStorage or analytics.
+The provided bounded in-memory store is for tests/demo only. Use the [encrypted single-host SQLite adapter](production-storage.md), or implement `set(key,value,expires)`, `get(key)` and **atomic one-use `take(key)`** in a reviewed shared durable store. Use consistent clocks, encrypted sensitive transaction storage, no request/body/token logging, trusted HTTPS proxy configuration and a deployment-specific secret system. Keep secure cookies on the exact game origin. Never expose the client secret or verifier to a bundle, URL, localStorage or analytics.
 
 Add backend rate limits for login/callback and a strict server session timeout. Clear sessions on account deletion/revocation according to the agreed contract. For multi-instance deployments, a process-local Map cannot prevent replay across instances. Load configuration at server startup and fail closed on discovery failure; do not fall back to another issuer.
 
@@ -79,3 +81,9 @@ Serve `index.html`, `game.mjs` and `sample.css` from the registered game's HTTPS
 The Stage 1 candidate adapter checks `GET https://attractmode.io/api/integration-status?client_id=...` before starting login, after callback verification and before serving an authenticated `/api/me`. This public status check contains no player information. Revoked, inactive, wrong-environment and unreachable registrations fail closed; guest gameplay remains available. Deploy this adapter only after the corresponding registry endpoint is live and your registration is active. Do not skip that check in production to make an unregistered client work.
 
 Configure a persistent random `AM_PLAYER_ID_KEY` on the backend, independent from your OAuth secret. The adapter derives a stable player ID with HMAC-SHA256 over game, environment, issuer and provider subject. Connected `/api/me` returns the game-scoped ID rather than the provider subject. Back up this key securely. Rotating it changes IDs and requires an explicit migration, while rotating the OAuth secret does not. This mapping identifies a player; it is not evidence of earned XP or achievements.
+
+### Changing the player ID key without losing player records
+
+OAuth client-secret rotation and player-ID-key rotation are different operations. Rotate the client secret through its issuer without changing `AM_PLAYER_ID_KEY`. Keep the player-ID key in your secret manager with a separately protected backup.
+
+If that key must change, do not replace it and let players appear as new accounts. Pause writes, take a database backup, and retain the old key in a restricted migration environment. Using your trusted issuer/subject mapping, derive each existing old ID and new ID for the exact same game/environment. Build a uniqueness-checked mapping, update player foreign keys in one transaction (or an idempotent versioned migration), and verify record counts and ownership before switching keys. Never merge records based on email. Keep a tested rollback and the old-to-new mapping until migration is verified. If you do not retain the trusted subject mapping, keep serving the existing stable IDs from your own identity table; you cannot reconstruct them from HMAC values alone. Restore the old key if no safe migration is available. Retire the old key only after all dependent records and rollback requirements are resolved.

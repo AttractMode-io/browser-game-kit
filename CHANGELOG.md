@@ -1,7 +1,9 @@
 # Changelog
 
-## Unreleased Stage 1 foundation
+## 0.2.0 Stage 1 foundation
 
+- Added encrypted durable single-host sessions and a human local consent UI.
+- Breaking: connected configuration now requires expected game ID and a persistent player-ID key; see docs/migration-0.2.md.
 - Added reproducible isolated local Supabase OAuth protocol tests with disposable identities.
 - Added real locally bundled Three.js scene and active-registration enforcement with scoped player IDs.
 - Added redacted local/optional public-connectivity doctor with explicit registration checks.

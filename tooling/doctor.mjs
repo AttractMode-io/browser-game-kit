@@ -20,7 +20,7 @@ export async function diagnose({ env = process.env, connected = false, online = 
     add('CALLBACK_FORMAT', valid ? 'pass' : 'fail', 'Use the exact registered HTTPS URL ending /auth/callback with no query, fragment or credentials.');
     add('REGISTRATION_REVIEW', 'manual', 'Confirm the callback, approved origin and client belong to this game in the developer workspace. This command cannot inspect private registration.');
   }
-  add('PRODUCTION_HOSTING', env.NODE_ENV === 'production' ? 'fail' : 'pass', 'Bundled server is development-only. Production requires durable atomic TTL storage and a reviewed backend.');
+  add('PRODUCTION_HOSTING', env.NODE_ENV === 'production' && (!env.AM_SESSION_DB?.startsWith('/') || !/^[a-f0-9]{64}$/i.test(env.AM_SESSION_KEY||'') || !connected) ? 'fail' : 'pass', 'Production requires connected mode, a private absolute AM_SESSION_DB path and 32-byte hex AM_SESSION_KEY behind trusted HTTPS. Default demo is memory-only.');
   if (online) {
     try {
       // Fixed public endpoint only: credentials are never sent. Redirects are rejected.

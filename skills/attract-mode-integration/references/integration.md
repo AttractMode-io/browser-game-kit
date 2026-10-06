@@ -1,6 +1,6 @@
 # Integration contract
 
-Verified against the kit shipped September 29, 2026. Check the current release before assuming a new capability exists. Official source: https://github.com/AttractMode-io/browser-game-kit. Platform: https://attractmode.io/developers.
+Updated for the Stage 1 release candidate on October 6, 2026. Check the current release before assuming a new capability exists. Official source: https://github.com/AttractMode-io/browser-game-kit. Platform: https://attractmode.io/developers.
 
 ## What is available
 
@@ -19,11 +19,11 @@ Local mock login requires no real account or secret. Production client registrat
 
 These are routes implemented by the sample inside the developer's game. They are not undocumented platform API endpoints. Use issuer discovery through account-client.mjs. Do not construct a custom authorization endpoint or change the trusted issuer.
 
-Use openid as the minimal scope. Add profile or email only for an approved need. Identity key is the pair (issuer, subject), not username or email. Third-party consent is required, even when the player already has an Attract Mode session. Do not copy an in-house client's credentials or consent exception, use prompt=none or scrape cross-domain cookies.
+Use openid as the minimal scope. Add profile or email only for an approved need. Retain the issuer/subject pair only in trusted backend records; use the derived game-scoped playerId in game data, never username or email as the identity key. Third-party consent is required, even when the player already has an Attract Mode session. Do not copy an in-house client's credentials or consent exception, use prompt=none or scrape cross-domain cookies.
 
 ## Storage and deployment
 
-The in-memory store is demo-only. Implement set(key, value, expires), get(key) and atomic one-use take(key) in durable server-only TTL storage shared by all instances. Bound its size, encrypt sensitive transaction data and expire unused transactions. Keep secure cookies and trusted HTTPS configuration; never expose secrets or tokens to URLs, logs, localStorage, analytics or browser bundles. Add login/callback rate limits. Load configuration at startup and fail closed when discovery fails.
+The in-memory store is demo-only. The kit includes an encrypted SQLite single-host adapter described in docs/production-storage.md; do not use it on ephemeral hosting or across network filesystems. Implement set(key, value, expires), get(key) and atomic one-use take(key) in durable server-only TTL storage shared by all instances. Bound its size, encrypt sensitive transaction data and expire unused transactions. Keep secure cookies and trusted HTTPS configuration; never expose secrets or tokens to URLs, logs, localStorage, analytics or browser bundles. Add login/callback rate limits. Load configuration at startup and fail closed when discovery fails.
 
 The game session expires at the earlier of identity-token expiry and one hour. Expiry starts a fresh authorization flow. Local logout does not sign the user out of other games. Confirm deletion/revocation handling as part of registration. A production connection needs real-browser checks for new and returning users, authorization denial, switching accounts, expired/replayed callbacks, mobile Safari/Chrome and logout.
 

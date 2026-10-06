@@ -16,6 +16,8 @@ test('player identifiers are stable and isolated across game and environment',()
  assert.equal(id,derivePlayerId(key,scope,'provider-user'));
  for(const other of [{gameId:'two',environment:'production'},{gameId:'one',environment:'sandbox'}]) assert.notEqual(id,derivePlayerId(key,other,'provider-user'));
  assert.notEqual(id,derivePlayerId(key,scope,'another-user'));assert.notEqual(id,'provider-user');
+ assert.notEqual(id,derivePlayerId('z'.repeat(32),scope,'provider-user'));
+ assert.notEqual(id,derivePlayerId(key,scope,'provider-user','http://127.0.0.1:56421/auth/v1'));
 });
 test('existing game sessions stop reporting signed-in state immediately when registry validation fails',async()=>{
  const {createDemoHandler,createDemoStore}=await import('../demo-handler.mjs');

@@ -32,9 +32,10 @@ export function createAccountClient({
 }) {
   const localTest = expectedIssuer === 'http://127.0.0.1:56421/auth/v1';
   if (expectedIssuer !== issuer && !localTest) throw Error('Unsupported identity issuer.');
+  if (!localTest && (typeof registrationCheck !== 'function' || typeof playerIdKey !== 'string' || Buffer.byteLength(playerIdKey) < 32)) throw Error('Production adapters require registry validation and a persistent player ID key.');
   const callback = new URL(redirectUri);
   if (
-    callback.protocol !== 'https:' ||
+    (callback.protocol !== 'https:' && !(localTest && callback.href === 'http://127.0.0.1:56431/auth/callback')) ||
     callback.pathname !== '/auth/callback' ||
     callback.search ||
     callback.hash ||
@@ -134,7 +135,7 @@ export function createAccountClient({
       )
         throw Error('Verified account identity required.');
       const registration = registrationCheck ? await registrationCheck() : null;
-      const playerId = registration ? derivePlayerId(playerIdKey, registration, claims.sub) : undefined;
+      const playerId = registration ? derivePlayerId(playerIdKey, registration, claims.sub, expectedIssuer) : undefined;
       // Tokens never leave this backend adapter. No unnecessary refresh/offline token is retained.
       return {
         issuer: expectedIssuer,
@@ -163,7 +164,7 @@ export function createRegistrationCheck(clientId, fetchImpl = globalThis.fetch, 
   };
 }
 
-export function derivePlayerId(key, registration, subject) {
+export function derivePlayerId(key, registration, subject, identityIssuer = issuer) {
   if (typeof key !== 'string' || Buffer.byteLength(key) < 32) throw Error('Persistent player ID key required.');
-  return createHmac('sha256', key).update(JSON.stringify([registration.gameId, registration.environment, issuer, subject])).digest('base64url');
+  return createHmac('sha256', key).update(JSON.stringify([registration.gameId, registration.environment, identityIssuer, subject])).digest('base64url');
 }

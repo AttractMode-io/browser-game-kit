@@ -77,9 +77,11 @@ The installer only copies the bundled skill into that project's documented skill
 
 Achievements, shared XP, playtime reporting, cloud saves, payments, subscriptions and revenue sharing are **not third-party APIs in this release**. Do not infer them from an account login or build against guessed endpoints. [The public capability contract](https://attractmode.io/developer-capabilities.json) records the current surface.
 
+Upgrading a connected 0.1.x game? Read [the 0.2 migration guide](docs/migration-0.2.md) before changing player identifiers.
+
 ## Security and production boundary
 
-This is a runnable reference implementation, not a production hosting service. The included server binds to loopback and deliberately refuses `NODE_ENV=production`: its session store is in memory. Before deployment, use durable TTL storage with atomic one-use consumption, a trusted HTTPS backend, production abuse controls and a reviewed account lifecycle. [Read the deployment checklist](docs/go-live.md).
+This is a runnable reference implementation, not a production hosting service. The default server binds to loopback and uses memory. A [single-host production adapter](docs/production-storage.md) adds encrypted SQLite TTL storage with atomic one-use consumption; production refuses to start without its configuration. Use a trusted HTTPS proxy, deployment abuse controls and a reviewed account lifecycle. [Read the deployment checklist](docs/go-live.md).
 
 The adapter verifies the issuer, audience, signature, state, nonce and expiry; binds transactions to the initiating browser; rejects replay; and keeps tokens and client secrets server-side. The browser receives an opaque HttpOnly session. Never reuse another game's client registration, bypass third-party consent or merge accounts by email.
 

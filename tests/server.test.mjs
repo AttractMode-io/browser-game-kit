@@ -18,7 +18,7 @@ test('one-command offline demo completes signed OIDC login and local logout',asy
  const authorize=await fetch(start.headers.get('location'),{redirect:'manual'});assert.equal(authorize.status,303);
  const finish=await fetch(authorize.headers.get('location'),{headers:{cookie:flow},redirect:'manual'}); assert.equal(finish.status,303);
  const session=cookieFrom(finish), me=await (await request('/api/me',{headers:{cookie:session}})).json();
- assert.equal(me.signedIn,true);assert.equal(me.account.subject,'offline-demo-player');assert.equal('access_token' in me,false);
+ assert.equal(me.signedIn,true);assert.equal(me.account.gameId,'offline-demo');assert.equal(typeof me.account.playerId,'string');assert.equal('access_token' in me,false);
  const replay=await fetch(authorize.headers.get('location'),{headers:{cookie:flow},redirect:'manual'});assert.equal(replay.status,400);
  assert.equal((await request('/auth/logout',{method:'POST',headers:{origin,cookie:session}})).status,303);
  assert.deepEqual(await (await request('/api/me',{headers:{cookie:session}})).json(),{signedIn:false,demo:true});
@@ -33,7 +33,7 @@ test('server fails closed on hostile origins, hosts, static paths and production
  assert.equal(await new Promise((resolve,reject)=>get(origin+'/',{headers:{host:'evil.example'}},response=>{response.resume();resolve(response.statusCode);}).on('error',reject)),403);
  assert.equal((await fetch(origin+'//evil.example')).status,403);
  assert.equal((await fetch(origin+'/auth/login',{method:'PUT'})).status,405);
- await assert.rejects(createGameServer({port:0,env:{NODE_ENV:'production'}}),/production adapter/);
+ await assert.rejects(createGameServer({port:0,env:{NODE_ENV:'production'}}),/Production requires/);
  await assert.rejects(createGameServer({port:0,connected:true,env:{}}),/registration/);
 });
 test('authentication attempts are bounded',async t=>{
@@ -78,4 +78,16 @@ test('Three.js example serves only allowlisted local browser dependencies',async
  }
  assert.notEqual((await fetch(base+'/account-client.mjs')).status,200);
  assert.notEqual((await fetch(base+'/.env')).status,200);
+});
+test('production reference starts only with encrypted persistent session configuration',async t=>{
+ const {mkdtemp,rm,stat}=await import('node:fs/promises');const {tmpdir}=await import('node:os');const {join}=await import('node:path');
+ const dir=await mkdtemp(join(tmpdir(),'am-production-')),filename=join(dir,'sessions.db');
+ const originalFetch=globalThis.fetch,issuer='https://dupwygdktojsuuzatmih.supabase.co/auth/v1';let server;
+ globalThis.fetch=async url=>{assert.equal(String(url),issuer+'/.well-known/openid-configuration');return Response.json({issuer,authorization_endpoint:issuer+'/oauth/authorize',token_endpoint:issuer+'/oauth/token',jwks_uri:issuer+'/.well-known/jwks.json',response_types_supported:['code'],id_token_signing_alg_values_supported:['ES256']});};
+ try {server=await createGameServer({port:0,connected:true,env:{NODE_ENV:'production',AM_SESSION_DB:filename,AM_SESSION_KEY:'ab'.repeat(32),AM_GAME_ID:'game',AM_PLAYER_ID_KEY:'k'.repeat(32),AM_GAME_CLIENT_ID:'test-only',AM_GAME_CLIENT_SECRET:'test-only',AM_GAME_REDIRECT_URI:'https://game.example/auth/callback'}});}
+ finally{globalThis.fetch=originalFetch;}
+ t.after(async()=>{await new Promise(resolve=>server.close(resolve));await rm(dir,{recursive:true,force:true});});
+ assert.equal((await stat(filename)).mode&0o777,0o600);
+ const result=await new Promise((resolve,reject)=>get('http://127.0.0.1:'+server.address().port+'/api/me',{headers:{host:'game.example'}},r=>{let body='';r.on('data',c=>body+=c);r.on('end',()=>resolve({status:r.statusCode,body}));}).on('error',reject));
+ assert.equal(result.status,200);assert.equal(JSON.parse(result.body).signedIn,false);
 });

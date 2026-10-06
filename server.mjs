@@ -8,11 +8,13 @@ import { createMockAccount, mockOrigin } from './mock-account.mjs';
 // A single-process development server, not a production hosting adapter.
 export async function createGameServer({ connected = false, port = 3000, env = process.env } = {}) {
   if (!Number.isInteger(port) || port < 0 || port > 65535) throw Error('Invalid port');
-  if (env.NODE_ENV === 'production') throw Error('Use a production adapter with durable atomic TTL storage; this server is development-only.');
+  const production=env.NODE_ENV==='production';
+  if(production&&(!connected||!env.AM_SESSION_DB||!env.AM_SESSION_KEY))throw Error('Production requires connected mode and durable atomic TTL storage configuration.');
   if (connected && env.AM_ENVIRONMENT && env.AM_ENVIRONMENT !== 'production') throw Error('No isolated sandbox issuer is configured. Use the offline simulation or an approved production registration.');
   const mock = connected ? null : createMockAccount();
   const client = connected ? await configureAccountClient({ clientId:env.AM_GAME_CLIENT_ID,clientSecret:env.AM_GAME_CLIENT_SECRET,redirectUri:env.AM_GAME_REDIRECT_URI,playerIdKey:env.AM_PLAYER_ID_KEY,gameId:env.AM_GAME_ID }) : mock.client;
-  const handle = createDemoHandler({ client });
+  const store=production?(await import('./session-store.mjs')).createSessionStore({filename:env.AM_SESSION_DB,key:env.AM_SESSION_KEY}):undefined;
+  const handle = createDemoHandler({ client, ...(store?{store}:{}) });
   let windowStart = Date.now(), authRequests = 0;
   const server = createServer(async (req,res) => {
     const localOrigin = 'http://127.0.0.1:'+server.address().port;
@@ -41,11 +43,11 @@ export async function createGameServer({ connected = false, port = 3000, env = p
       const assets = { '/examples/threejs':'examples/threejs.html','/examples/threejs.mjs':'examples/threejs.mjs','/integrations/threejs.mjs':'integrations/threejs.mjs','/integrations/account-ui.mjs':'integrations/account-ui.mjs','/vendor/three.module.js':'node_modules/three/build/three.module.js','/vendor/three.core.js':'node_modules/three/build/three.core.js','/':'index.html','/game.mjs':'game.mjs','/sample.css':'sample.css' };
       if (req.method==='GET' && Object.hasOwn(assets,url.pathname)) {
         let body = await readFile(new URL(assets[url.pathname],import.meta.url),'utf8');
-        if (url.pathname==='/') body=body.replace('<main>', '<main><p class="mode-notice">'+(connected ? 'Connected development mode. Real Attract Mode sign-in; temporary local storage.' : 'OFFLINE DEMO. No real account, credentials or internet access needed. The sign-in simulation uses a local test identity.')+'</p>');
+        if (url.pathname==='/') body=body.replace('<main>', '<main><p class="mode-notice">'+(connected ? 'Connected account mode. Real Attract Mode sign-in.' : 'OFFLINE DEMO. No real account, credentials or internet access needed. The sign-in simulation uses a local test identity.')+'</p>');
         if (!connected && url.pathname==='/') body=body.replace('Sign in with Attract Mode','Simulate sign-in (offline)');
         // Documents retain Origin on same-origin form POSTs without sharing URL paths.
         // Private /auth and /api responses keep the default no-referrer policy.
-        return reply(200,body,{...(url.pathname==='/'?{'Referrer-Policy':'strict-origin'}:{}),'Content-Type':(url.pathname.endsWith('.mjs')||url.pathname.endsWith('.js'))?'text/javascript; charset=utf-8':url.pathname.endsWith('.css')?'text/css; charset=utf-8':'text/html; charset=utf-8'});
+        return reply(200,body,{...((url.pathname==='/'||url.pathname==='/examples/threejs')?{'Referrer-Policy':'strict-origin'}:{}),'Content-Type':(url.pathname.endsWith('.mjs')||url.pathname.endsWith('.js'))?'text/javascript; charset=utf-8':url.pathname.endsWith('.css')?'text/css; charset=utf-8':'text/html; charset=utf-8'});
       }
       const requestHeaders = new Headers();
       if (req.headers.cookie) requestHeaders.set('cookie', connected ? req.headers.cookie : req.headers.cookie.replaceAll('am-demo-flow=','__Host-am-game-flow=').replaceAll('am-demo-session=','__Host-am-game-session='));
@@ -71,6 +73,7 @@ export async function createGameServer({ connected = false, port = 3000, env = p
       reply(400,JSON.stringify({error:'Request could not be completed. Start again.'}),{'Content-Type':'application/json'});
     }
   });
+  server.once('close',()=>store?.close());
   server.requestTimeout=10000; server.headersTimeout=10000;
   await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(port,'127.0.0.1',resolve);});
   return server;
@@ -78,6 +81,6 @@ export async function createGameServer({ connected = false, port = 3000, env = p
 if (process.argv[1] && fileURLToPath(import.meta.url)===process.argv[1]) {
   try {
     const connected=process.argv.includes('--connected'), server=await createGameServer({connected,port:Number(process.env.PORT||3000)});
-    console.log(connected ? 'Connected development adapter ready on loopback. Open your registered HTTPS origin through a trusted proxy.' : 'Offline demo: http://127.0.0.1:'+server.address().port+' (no real accounts)');
+    console.log(connected ? 'Connected account adapter ready on loopback. Open your registered HTTPS origin through a trusted proxy.' : 'Offline demo: http://127.0.0.1:'+server.address().port+' (no real accounts)');
   } catch(error) { console.error(error.message);process.exitCode=1; }
 }

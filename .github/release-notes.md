@@ -1,3 +1,5 @@
+Version 0.2.0 adds launch-foundation tooling. Connected integrations have breaking configuration changes; read docs/migration-0.2.md before upgrading.
+
 Get your browser game listed, prepare real Attract Mode sign-in, or request a focused managed playtest with a clear next step.
 
 This update adds:
@@ -10,7 +12,7 @@ This update adds:
 
 Download **attract-mode-browser-game-kit.zip**, extract it, run `npm ci --ignore-scripts` and `npm run dev`, then open the printed local URL. Node.js 24 or later is required. **SHA256SUMS.txt** contains the archive checksum.
 
-The default login remains an offline simulation. Real accounts require separately approved client registration, exact HTTPS callbacks, player consent and a production backend with durable transaction storage. The sample development server refuses production mode. No achievement, shared XP, payment or cloud-save API is included.
+The default login remains an offline simulation. Real accounts require separately approved client registration, exact HTTPS callbacks, player consent and a production backend with durable transaction storage. Production requires the separately configured encrypted SQLite single-host store or an equivalent reviewed durable adapter. No achievement, shared XP, payment or cloud-save API is included.
 
 A listing request does not grant ownership, a sign-in request does not issue credentials, and a playtest request does not recruit testers or authorize payment. Read the workspace review notes and fulfillment record for the actual outcome.
 
