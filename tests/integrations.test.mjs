@@ -65,3 +65,8 @@ test('account timeout aborts the request and preserves guest play', async () => 
  const ui=mountAccountUI({element,timeoutMs:5,fetchImpl:(_url,{signal})=>new Promise((_resolve,reject)=>signal.addEventListener('abort',()=>{aborted=true;reject(Error('aborted'));}))});
  await ui.ready; assert.equal(aborted,true); assert.match(element.children[0].textContent,/Guest play still works/);ui.dispose();
 });
+test('Three.js account forms carry the explicit return path without accepting external destinations',async()=>{
+ const element=fixture();const ui=mountAccountUI({element,returnTo:'/examples/threejs',fetchImpl:response({signedIn:false})});await ui.ready;
+ assert.equal(element.children[1].action,'/auth/login?return_to=%2Fexamples%2Fthreejs');assert.equal(element.children[2].action,'/auth/logout?return_to=%2Fexamples%2Fthreejs');
+ assert.throws(()=>mountAccountUI({element,returnTo:'https://evil.example'}),/allowlisted/);ui.dispose();
+});

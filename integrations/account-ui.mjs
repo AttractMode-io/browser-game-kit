@@ -1,7 +1,9 @@
 // Browser-only UI. Identity and authorization always belong to the backend.
-export function mountAccountUI({ element, fetchImpl = globalThis.fetch, timeoutMs = 5000 }) {
+export function mountAccountUI({ element, fetchImpl = globalThis.fetch, timeoutMs = 5000, returnTo = '/' }) {
   if (!element || typeof element.replaceChildren !== 'function') throw Error('Supply an account UI element.');
   if (!Number.isFinite(timeoutMs) || timeoutMs < 1 || timeoutMs > 30000) throw Error('timeoutMs must be between 1 and 30000.');
+  if (!['/','/examples/threejs'].includes(returnTo)) throw Error('Use an allowlisted game return path.');
+  const suffix=returnTo==='/'?'':'?return_to='+encodeURIComponent(returnTo);
   const document = element.ownerDocument;
   const status = document.createElement('p');
   status.setAttribute('role', 'status');
@@ -12,8 +14,8 @@ export function mountAccountUI({ element, fetchImpl = globalThis.fetch, timeoutM
     button.type = 'submit'; button.textContent = text;
     form.append(button); return { form, button };
   };
-  const login = makeForm('/auth/login', 'Sign in with Attract Mode');
-  const logout = makeForm('/auth/logout', 'Sign out of this game');
+  const login = makeForm('/auth/login'+suffix, 'Sign in with Attract Mode');
+  const logout = makeForm('/auth/logout'+suffix, 'Sign out of this game');
   element.replaceChildren(status, login.form, logout.form);
   let disposed = false, revision = 0, controller;
   async function refresh() {

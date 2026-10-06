@@ -30,12 +30,14 @@ try {
   if(req.headers.host!==new URL(gameOrigin).host||!req.url.startsWith('/')||req.url.startsWith('//'))return reply(res,403,'Invalid host.');
   const url=new URL(req.url,gameOrigin);
   if(req.method==='GET'&&url.pathname==='/')return reply(res,200,page('<h1>Real local OAuth sandbox</h1><p>Only disposable local identities are used. This is not a production Attract Mode account.</p><aside id="account"></aside><p><a href="/">Refresh account status</a></p><p>The local test player is pre-signed into the isolated provider. Choose Allow or Deny at consent.</p><script type="module" src="/sandbox-ui.mjs"></script>'));
+  if(req.method==='GET'&&url.pathname==='/signin-result')return reply(res,200,page('<h1>Sign-in did not finish</h1><p>Access was declined, the request expired, or it could not be verified. You can keep playing without signing in.</p><p><a href="/">Return to the local game</a></p>'));
   if(req.method==='GET'&&url.pathname==='/sandbox-ui.mjs')return reply(res,200,"import {mountAccountUI} from '/account-ui.mjs';mountAccountUI({element:document.querySelector('#account')});",'text/javascript');
   if(req.method==='GET'&&url.pathname==='/account-ui.mjs')return reply(res,200,await readFile(new URL('../integrations/account-ui.mjs',import.meta.url),'utf8'),'text/javascript');
   if(!['GET','POST'].includes(req.method)||req.headers['transfer-encoding']||Number(req.headers['content-length']||0)>1024)return reply(res,400,'Unsupported request.');
   const headers=new Headers();if(req.headers.origin)headers.set('origin',req.headers.origin);if(req.headers.cookie)headers.set('cookie',req.headers.cookie.replaceAll('am-local-flow=','__Host-am-game-flow=').replaceAll('am-local-session=','__Host-am-game-session='));
   const result=await handle(new Request(url,{method:req.method,headers}));
   const out=Object.fromEntries(result.headers);delete out['set-cookie'];out['set-cookie']=result.headers.getSetCookie().map(c=>c.replace('__Host-am-game-flow=','am-local-flow=').replace('__Host-am-game-session=','am-local-session=').replace('; Secure',''));
+  if(url.pathname==='/auth/callback'&&result.status>=400)return reply(res,303,'','text/plain',{...out,Location:gameOrigin+'/signin-result'});
   reply(res,result.status,await result.text(),'application/json',out);
  }catch{reply(res,400,'Local sign-in failed. Return to the game and start again.');}});
  consentServer=createServer(async(req,res)=>{try{

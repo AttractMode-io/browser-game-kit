@@ -14,7 +14,7 @@ export async function createGameServer({ connected = false, port = 3000, env = p
   const mock = connected ? null : createMockAccount();
   const client = connected ? await configureAccountClient({ clientId:env.AM_GAME_CLIENT_ID,clientSecret:env.AM_GAME_CLIENT_SECRET,redirectUri:env.AM_GAME_REDIRECT_URI,playerIdKey:env.AM_PLAYER_ID_KEY,gameId:env.AM_GAME_ID }) : mock.client;
   const store=production?(await import('./session-store.mjs')).createSessionStore({filename:env.AM_SESSION_DB,key:env.AM_SESSION_KEY}):undefined;
-  const handle = createDemoHandler({ client, ...(store?{store}:{}) });
+  const handle = createDemoHandler({ client, returnPaths:['/','/examples/threejs'], ...(store?{store}:{}) });
   let windowStart = Date.now(), authRequests = 0;
   const server = createServer(async (req,res) => {
     const localOrigin = 'http://127.0.0.1:'+server.address().port;

@@ -41,7 +41,11 @@ export function createDemoHandler({
   client,
   store = createDemoStore(),
   clock = Date.now,
+  returnPaths = ['/'],
 }) {
+  const allowedReturns=new Set(returnPaths);
+  for(const path of allowedReturns)if(typeof path!=='string'||!path.startsWith('/')||path.startsWith('//')||path.includes('\\')||new URL(path,client.origin).origin!==client.origin||new URL(path,client.origin).pathname!==path)throw Error('Return paths must be fixed same-origin paths.');
+  const returnPath=url=>allowedReturns.has(url.searchParams.get('return_to'))?url.searchParams.get('return_to'):'/';
   const response = (body, status = 200, cookies = [], location) => {
     const headers = new Headers({
       'Cache-Control': 'no-store',
@@ -69,6 +73,7 @@ export function createDemoHandler({
         if (previous) await store.take('flow:' + previous);
         const flow = await client.begin(),
           id = random();
+        flow.transaction.returnTo=returnPath(url);
         await store.set(
           'flow:' + id,
           flow.transaction,
@@ -97,7 +102,7 @@ export function createDemoHandler({
               Math.max(0, Math.floor((account.expires - clock()) / 1000)),
             ),
           ],
-          client.origin + '/',
+          client.origin + (allowedReturns.has(transaction.returnTo)?transaction.returnTo:'/'),
         );
       }
       if (url.pathname === '/auth/logout' && request.method === 'POST') {
@@ -107,7 +112,7 @@ export function createDemoHandler({
           {},
           303,
           [cookie(sessionCookie, '', 0), cookie(flowCookie, '', 0)],
-          client.origin + '/',
+          client.origin + returnPath(url),
         );
       }
       if (url.pathname === '/api/me' && request.method === 'GET') {

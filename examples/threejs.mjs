@@ -1,9 +1,11 @@
 import * as THREE from '/vendor/three.module.js';
 import {mountThreeAccountUI} from '/integrations/threejs.mjs';
-const account=mountThreeAccountUI({element:document.querySelector('#account-menu')});
+const account=mountThreeAccountUI({returnTo:'/examples/threejs',element:document.querySelector('#account-menu')});
 const canvas=document.querySelector('#scene'),status=document.querySelector('#scene-status'),score=document.querySelector('#scene-score');
 let renderer,geometry,material,hits=0;
-const hit=()=>{score.textContent=`${++hits} hits`;};
+try{const saved=Number(sessionStorage.getItem('am-kit-threejs-hits'));if(Number.isSafeInteger(saved)&&saved>=0&&saved<=1000000)hits=saved;}catch{}
+score.textContent=`${hits} hits`;
+const hit=()=>{score.textContent=`${++hits} hits`;try{sessionStorage.setItem('am-kit-threejs-hits',String(hits));}catch{}};
 document.querySelector('#score-button').addEventListener('click',hit);
 try {
  renderer=new THREE.WebGLRenderer({canvas,antialias:true});

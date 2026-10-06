@@ -91,3 +91,11 @@ test('production reference starts only with encrypted persistent session configu
  const result=await new Promise((resolve,reject)=>get('http://127.0.0.1:'+server.address().port+'/api/me',{headers:{host:'game.example'}},r=>{let body='';r.on('data',c=>body+=c);r.on('end',()=>resolve({status:r.statusCode,body}));}).on('error',reject));
  assert.equal(result.status,200);assert.equal(JSON.parse(result.body).signedIn,false);
 });
+test('login and logout return only to configured game paths',async t=>{
+ const server=await createGameServer({port:0,env:{}});t.after(()=>new Promise(r=>server.close(r)));const base='http://127.0.0.1:'+server.address().port;
+ for(const [input,expected] of [['/examples/threejs','/examples/threejs'],['https://evil.example','/'],['//evil.example','/'],['/unknown','/']]){
+  let r=await fetch(base+'/auth/login?return_to='+encodeURIComponent(input),{method:'POST',headers:{origin:base},redirect:'manual'});const cookie=r.headers.getSetCookie().map(c=>c.split(';')[0]).join('; ');
+  r=await fetch(r.headers.get('location'),{redirect:'manual'});r=await fetch(r.headers.get('location'),{headers:{cookie},redirect:'manual'});assert.equal(r.headers.get('location'),base+expected);
+  r=await fetch(base+'/auth/logout?return_to='+encodeURIComponent(input),{method:'POST',headers:{origin:base},redirect:'manual'});assert.equal(r.headers.get('location'),base+expected);
+ }
+});

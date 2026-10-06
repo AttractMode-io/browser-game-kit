@@ -37,3 +37,5 @@ First run the offline kit to understand the flow. For a separately hosted static
 ## What is tested
 
 Automated tests cover the shared panel's guest, connected, offline, failed-request and teardown states, plus the backend's signed mock sign-in flow. The included scene is an integration example, not a replacement for testing your renderer, pointer-lock controls or a real registered client. HTTP tests verify its dependency paths; WebGL rendering needs a real-browser check. Run those checks in your own game before release.
+
+The included scene uses a fixed `/examples/threejs` return path for login/logout. The server stores that allowlisted path with the sign-in transaction; it never follows arbitrary return URLs. Its practice-hit count is kept only in sessionStorage for this tab, including across sign-in navigation. This is local demo state, not account progression or cloud save. For another game route, configure a trusted server allowlist and matching frontend action; never accept unrestricted URLs.
