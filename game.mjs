@@ -4,8 +4,18 @@ const login = document.querySelector('form[action="/auth/login"]');
 const logout = document.querySelector('form[action="/auth/logout"]');
 login.hidden = true;
 logout.hidden = true;
+let hits = 0;
+const target = document.querySelector('#target'),
+  score = document.querySelector('#score');
+target.addEventListener('click', () => {
+  hits++;
+  score.textContent = hits + ' hits';
+  target.style.left = Math.floor(Math.random() * 80) + '%';
+  target.style.top = Math.floor(Math.random() * 75) + '%';
+});
+
 try {
-  const response = await fetch('/api/me', { cache: 'no-store' });
+  const response = await fetch('/api/me', { cache: 'no-store', credentials: 'same-origin', redirect: 'error', signal: AbortSignal.timeout(5000) });
   if (!response.ok) throw Error('Session unavailable');
   const session = await response.json();
   login.hidden = Boolean(session.signedIn);
@@ -17,12 +27,3 @@ try {
   identity.textContent =
     'Account connection unavailable. Practice still works.';
 }
-let hits = 0;
-const target = document.querySelector('#target'),
-  score = document.querySelector('#score');
-target.addEventListener('click', () => {
-  hits++;
-  score.textContent = hits + ' hits';
-  target.style.left = Math.floor(Math.random() * 80) + '%';
-  target.style.top = Math.floor(Math.random() * 75) + '%';
-});

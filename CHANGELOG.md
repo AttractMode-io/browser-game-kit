@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased Stage 1 foundation
+
+- Added redacted local/optional public-connectivity doctor with explicit registration checks.
+- Added browser/server package boundaries and session lookup cancellation/timeouts.
+- Added extracted ZIP smoke checks and documentation MCP guides.
+- Connected mode rejects unsupported environments; offline simulation is not a hosted sandbox.
+
 ## 0.1.2 - 2026-10-05
 
 - Complete listing, sign-in and managed-playtest onboarding guide, portable request templates and honest review-status explanations.

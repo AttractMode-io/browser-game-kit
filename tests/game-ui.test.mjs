@@ -17,3 +17,17 @@ test('account UI distinguishes offline simulation and shows only the relevant se
   }
  } finally {globalThis.document=originalDocument;globalThis.fetch=originalFetch;}
 });
+test('guest gameplay starts before an unresolved account lookup',async()=>{
+ const code=await readFile(new URL('../game.mjs',import.meta.url),'utf8');
+ const oldDocument=globalThis.document,oldFetch=globalThis.fetch;
+ let click,finish;
+ const target={style:{},addEventListener(_event,fn){click=fn;}},score={};
+ globalThis.document={querySelector:selector=>selector==='#target'?target:selector==='#score'?score:{}};
+ globalThis.fetch=()=>new Promise(resolve=>{finish=resolve;});
+ try {
+  const pending=import('data:text/javascript;base64,'+Buffer.from(code+'\n// pending lookup').toString('base64'));
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(typeof click,'function');click();assert.equal(score.textContent,'1 hits');
+  finish(Response.json({signedIn:false}));await pending;
+ } finally {globalThis.document=oldDocument;globalThis.fetch=oldFetch;}
+});

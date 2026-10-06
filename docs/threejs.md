@@ -2,6 +2,10 @@
 
 Keep your renderer and guest game running. The kit adds a small HTML account panel beside your canvas; sign-in happens through your game's backend. This recipe does not add achievements, cloud saves or shared XP.
 
+## Run the included scene
+
+Run `npm ci --ignore-scripts` and `npm run dev`, then open http://127.0.0.1:3000/examples/threejs. Three.js is pinned locally; the scene uses no CDN. Click the rotating cube or use the keyboard button while account lookup runs independently. The default server uses the clearly labeled offline account simulation.
+
 ## Wire your existing game
 
 Copy `integrations/` into your project's browser source and bundle it using your existing build tool. Put a panel outside the canvas:
@@ -32,4 +36,4 @@ First run the offline kit to understand the flow. For a separately hosted static
 
 ## What is tested
 
-Automated tests cover the shared panel's guest, connected, offline, failed-request and teardown states, plus the backend's signed mock sign-in flow. These are framework wiring examples: this release does not render a Three.js scene in its tests and has not validated your renderer, pointer-lock controls or a real registered client. Run those checks in your own game before release.
+Automated tests cover the shared panel's guest, connected, offline, failed-request and teardown states, plus the backend's signed mock sign-in flow. The included scene is an integration example, not a replacement for testing your renderer, pointer-lock controls or a real registered client. HTTP tests verify its dependency paths; WebGL rendering needs a real-browser check. Run those checks in your own game before release.

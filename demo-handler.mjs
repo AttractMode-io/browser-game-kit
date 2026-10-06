@@ -114,11 +114,12 @@ export function createDemoHandler({
         const account = await store.get(
           'session:' + readCookie(request, sessionCookie),
         );
+        if (account && client.validateSession) await client.validateSession(account);
         return response(
           account
             ? {
                 signedIn: true,
-                account: { issuer: account.issuer, subject: account.subject },
+                account: account.playerId ? {playerId:account.playerId,gameId:account.gameId,environment:account.environment} : { issuer: account.issuer, subject: account.subject },
               }
             : { signedIn: false },
         );

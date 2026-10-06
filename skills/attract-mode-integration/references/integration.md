@@ -32,3 +32,8 @@ The game session expires at the earlier of identity-token expiry and one hour. E
 Available on the Attract Mode website: catalog game/studio pages, reviewed ownership claims and corrections, private game saves/studio follows, moderated reviews and scoped developer measurement. These site features do not grant API access or player information to an arbitrary game.
 
 Not provided as third-party APIs in this kit: achievements, shared XP, playtime reporting, payments, subscription entitlements, revenue sharing, cloud saves or in-game community. A click is not gameplay; a login is not playtime; browser-submitted XP is not trusted. Do not synthesize endpoints or present roadmap items as released capabilities.
+
+
+## Stage 1 adapter contract
+
+Connected mode requires `AM_PLAYER_ID_KEY`, a persistent random server-only key of at least 32 bytes. It derives game/environment-scoped player IDs independently from the rotating OAuth secret. Back it up and plan a migration before changing it. The adapter checks the fixed public integration registry at login, callback and authenticated session reads, and fails closed when inactive or unreachable. The corresponding platform endpoint must be deployed first; no guessed endpoint substitutes are allowed. See `docs/account-integration.md` in the kit for the complete contract. Run `npm run doctor` for redacted local checks. An offline simulation is not an integration sandbox.

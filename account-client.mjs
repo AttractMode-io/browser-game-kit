@@ -1,25 +1,32 @@
 // Adapted from the existing False Start openid-client adapter, with third-party scope/consent rules.
+if (typeof window !== 'undefined') throw Error('Attract Mode account-client is server-only. Import the browser account panel instead.');
+import {createHmac} from 'node:crypto';
 import * as oidc from 'openid-client';
 export const issuer = 'https://dupwygdktojsuuzatmih.supabase.co/auth/v1';
 export async function configureAccountClient({
   clientId,
   clientSecret,
   redirectUri,
+  playerIdKey,
 }) {
   if (!clientId || !clientSecret)
     throw Error('Use the client registration supplied for your game.');
+  if (!playerIdKey || Buffer.byteLength(playerIdKey) < 32) throw Error('Configure a persistent server-only AM_PLAYER_ID_KEY of at least 32 bytes.');
+
   const configuration = await oidc.discovery(
     new URL(issuer),
     clientId,
     { client_secret: clientSecret, id_token_signed_response_alg: 'ES256' },
     oidc.ClientSecretPost(clientSecret),
   );
-  return createAccountClient({ configuration, redirectUri });
+  return createAccountClient({ configuration, redirectUri, registrationCheck: createRegistrationCheck(clientId), playerIdKey });
 }
 export function createAccountClient({
   configuration,
   redirectUri,
   clock = Date.now,
+  registrationCheck,
+  playerIdKey,
 }) {
   const callback = new URL(redirectUri);
   if (
@@ -51,7 +58,13 @@ export function createAccountClient({
   oidc.enableNonRepudiationChecks(configuration);
   return {
     origin: callback.origin,
+    async validateSession(account) {
+      if (!registrationCheck) return;
+      const registration = await registrationCheck();
+      if (account.gameId !== registration.gameId || account.environment !== registration.environment) throw Error('Registration changed.');
+    },
     async begin() {
+      if (registrationCheck) await registrationCheck();
       const transaction = {
         state: oidc.randomState(),
         nonce: oidc.randomNonce(),
@@ -116,12 +129,36 @@ export function createAccountClient({
         claims.iss !== issuer
       )
         throw Error('Verified account identity required.');
+      const registration = registrationCheck ? await registrationCheck() : null;
+      const playerId = registration ? derivePlayerId(playerIdKey, registration, claims.sub) : undefined;
       // Tokens never leave this backend adapter. No unnecessary refresh/offline token is retained.
       return {
         issuer,
         subject: claims.sub,
+        ...(registration ? {playerId, gameId: registration.gameId, environment: registration.environment} : {}),
         expires: Math.min(clock() + 3600000, claims.exp * 1000),
       };
     },
   };
+}
+
+// Fixed public registry endpoint. No access token, subject or client secret is sent.
+export function createRegistrationCheck(clientId, fetchImpl = globalThis.fetch) {
+  if (typeof clientId !== 'string' || !clientId || clientId.length > 256) throw Error('Invalid client ID.');
+  return async () => {
+    const url = new URL('https://attractmode.io/api/integration-status');
+    url.searchParams.set('client_id', clientId);
+    try {
+      const r = await fetchImpl(url, {redirect:'error',cache:'no-store',signal:AbortSignal.timeout(5000)});
+      if (!r.ok) throw Error();
+      const value = await r.json();
+      if (value.active !== true || value.environment !== 'production' || typeof value.gameId !== 'string' || !value.gameId || value.gameId.length > 256) throw Error();
+      return {gameId:value.gameId,environment:value.environment};
+    } catch {throw Error('Game integration is inactive or its status could not be verified.');}
+  };
+}
+
+export function derivePlayerId(key, registration, subject) {
+  if (typeof key !== 'string' || Buffer.byteLength(key) < 32) throw Error('Persistent player ID key required.');
+  return createHmac('sha256', key).update(JSON.stringify([registration.gameId, registration.environment, issuer, subject])).digest('base64url');
 }

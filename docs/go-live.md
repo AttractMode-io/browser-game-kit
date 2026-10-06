@@ -12,7 +12,7 @@ Page verification and OAuth registration are separate. A verified listing does n
 
 ## 3. Try a connected development session
 
-After registration, copy `.env.example` to `.env`. Set your client ID, client secret and the exact registered HTTPS redirect URI. This file is ignored by Git. Keep it out of uploads, logs, screenshots, chats and browser bundles.
+After registration, copy `.env.example` to `.env`. Set your client ID, client secret, persistent random `AM_PLAYER_ID_KEY` and the exact registered HTTPS redirect URI. Keep the player ID key unchanged across OAuth-secret rotations. Confirm the integration registry endpoint is live and your client is active. This file is ignored by Git. Keep it out of uploads, logs, screenshots, chats and browser bundles.
 
 Run `npm run start:connected`. The server still listens on loopback. Put a trusted HTTPS reverse proxy in front of it for your registered development origin and preserve that origin's Host header. Forward `/`, the two static game assets, `/auth/*` and `/api/me`. Do not expose the raw loopback port publicly or trust arbitrary forwarded headers. Configure certificates and the registered domain normally; do not disable TLS checks.
 
@@ -20,7 +20,7 @@ The adapter uses the existing Attract Mode issuer's discovery metadata. The call
 
 ## 4. Move the adapter into your real backend
 
-Import `configureAccountClient` and `createDemoHandler`; the integration guide shows the concrete interface. Serve the game with your framework and retain the backend account routes. Use `(issuer, subject)` as the account key. Keep email-based legacy account linking separate and require explicit proof of both accounts.
+Import `configureAccountClient` and `createDemoHandler`; the integration guide shows the concrete interface. Serve the game with your framework and retain the backend account routes. Retain `(issuer, subject)` only in trusted backend identity records; use the derived `playerId` for game-facing records. The persistent key and game/environment namespace keep that ID stable and scoped. Keep email-based legacy account linking separate and require explicit proof of both accounts.
 
 Replace the demo Map with durable TTL storage implementing `set`, `get` and **atomic one-use `take`** before production. Store transaction state, nonce and PKCE verifier server-side with a ten-minute expiry. A get-then-delete sequence is not atomic across workers. Encrypt sensitive data at rest, use trusted clocks and never log raw transaction, cookie or token contents.
 

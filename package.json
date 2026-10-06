@@ -11,10 +11,13 @@
     "dev": "node server.mjs",
     "start:connected": "node --env-file=.env server.mjs --connected",
     "test": "node --test tests/*.test.mjs",
-    "test:agents": "node --test agents/install.test.mjs"
+    "test:agents": "node --test agents/install.test.mjs",
+    "doctor": "node tooling/doctor.mjs",
+    "test:release": "node tooling/release-smoke.mjs"
   },
   "dependencies": {
-    "openid-client": "6.8.8"
+    "openid-client": "6.8.8",
+    "three": "0.186.0"
   },
   "license": "MIT",
   "repository": {
@@ -33,5 +36,13 @@
     "agent-skills",
     "mcp",
     "attract-mode"
-  ]
+  ],
+  "exports": {
+    "./browser": "./integrations/account-ui.mjs",
+    "./threejs": "./integrations/threejs.mjs",
+    "./phaser": "./integrations/phaser.mjs",
+    "./server": {
+      "node": "./account-client.mjs"
+    }
+  }
 }

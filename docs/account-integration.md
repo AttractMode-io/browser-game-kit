@@ -73,3 +73,9 @@ Before a Connected badge, submit evidence for real registration, new/returning l
 ## Tiny playable page
 
 Serve `index.html`, `game.mjs` and `sample.css` from the registered game's HTTPS origin, alongside the Request handler routes above. The target-click game runs even when logged out. It reads `/api/me` to show connection status and uses same-origin POST forms for login/logout. Its hit counter is tab-local practice only. This makes the distinction between gameplay and account integration visible without inventing platform XP or storage APIs.
+
+## Registry and game-scoped player identity
+
+The Stage 1 candidate adapter checks `GET https://attractmode.io/api/integration-status?client_id=...` before starting login, after callback verification and before serving an authenticated `/api/me`. This public status check contains no player information. Revoked, inactive, wrong-environment and unreachable registrations fail closed; guest gameplay remains available. Deploy this adapter only after the corresponding registry endpoint is live and your registration is active. Do not skip that check in production to make an unregistered client work.
+
+Configure a persistent random `AM_PLAYER_ID_KEY` on the backend, independent from your OAuth secret. The adapter derives a stable player ID with HMAC-SHA256 over game, environment, issuer and provider subject. Connected `/api/me` returns the game-scoped ID rather than the provider subject. Back up this key securely. Rotating it changes IDs and requires an explicit migration, while rotating the OAuth secret does not. This mapping identifies a player; it is not evidence of earned XP or achievements.

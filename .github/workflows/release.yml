@@ -35,6 +35,13 @@ jobs:
           git archive --format=zip --prefix=attract-mode-browser-game-kit/ HEAD > dist/attract-mode-browser-game-kit.zip
           cd dist
           sha256sum attract-mode-browser-game-kit.zip > SHA256SUMS.txt
+      - name: Verify extracted ZIP
+        run: |
+          unzip -q dist/attract-mode-browser-game-kit.zip -d /tmp/kit-release
+          cd /tmp/kit-release/attract-mode-browser-game-kit
+          npm ci --ignore-scripts
+          npm run doctor
+          npm run test:release
       - name: Publish checked release
         env:
           GH_TOKEN: ${{ github.token }}

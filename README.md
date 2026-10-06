@@ -28,6 +28,10 @@ Open **http://127.0.0.1:3000**. Click targets, select **Simulate sign-in (offlin
 
 **Using the ZIP?** Extract it, open a terminal in the extracted folder containing `package.json`, then run `npm ci --ignore-scripts` and `npm run dev`. You do not need Git. Dependencies download during installation; the default demo runs offline afterward. Stop with Ctrl+C. If port 3000 is occupied, set `PORT=3001` in your shell before starting.
 
+Run `npm run doctor` for a redacted setup report. Add `-- --online` to check the public capability manifest. [Diagnostic codes and boundaries](docs/diagnostics.md).
+
+A runnable Three.js scene is also at **http://127.0.0.1:3000/examples/threejs**. Its render loop starts without waiting for sign-in.
+
 ## Choose your next step
 
 | You want to… | Start here |
@@ -45,7 +49,7 @@ Open **http://127.0.0.1:3000**. Click targets, select **Simulate sign-in (offlin
 | Prepare a request without an interactive browser | [Text template](docs/developer-request-template.txt) · [JSON template](docs/developer-request-template.json) |
 | Check what the platform actually exposes | [Capability manifest](mcp/capabilities.json) |
 
-The kit is framework-neutral JavaScript. Keep your Three.js, Phaser, React or other game stack. The account adapter runs on a backend; do not paste it into a browser bundle. A static-only game needs a backend-for-frontend before using confidential-client login.
+Browser and server entries are separated in [the package boundary guide](docs/package-boundaries.md). The kit is framework-neutral JavaScript. Keep your Three.js, Phaser, React or other game stack. The account adapter runs on a backend; do not paste it into a browser bundle. A static-only game needs a backend-for-frontend before using confidential-client login.
 
 ## Use your coding agent
 

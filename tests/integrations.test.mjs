@@ -12,7 +12,7 @@ const response = value => async () => Response.json(value);
 test('browser panel uses same-origin private session fetch and native POST forms', async () => {
   const element = fixture();
   const ui = mountThreeAccountUI({ element, fetchImpl: async (url, options) => {
-    assert.equal(url, '/api/me'); assert.deepEqual(options, { credentials: 'same-origin', cache: 'no-store', redirect: 'error' });
+    assert.equal(url, '/api/me'); assert.ok(options.signal instanceof AbortSignal); assert.deepEqual({...options, signal: undefined}, { signal: undefined, credentials: 'same-origin', cache: 'no-store', redirect: 'error' });
     return Response.json({ signedIn: false });
   } });
   await ui.ready;
@@ -58,4 +58,10 @@ test('Phaser scene shutdown disposes panel and listeners, restart can mount anew
   const next = attachPhaserAccountUI(scene, {element,fetchImpl:response({signedIn:true})}); await next.ready;
   assert.equal(element.children[2].hidden, false); next.dispose(); assert.equal(scene.events.listenerCount('shutdown'), 0);
   assert.throws(() => attachPhaserAccountUI({}, {element}), /Phaser scene/);
+});
+
+test('account timeout aborts the request and preserves guest play', async () => {
+ const element=fixture(); let aborted=false;
+ const ui=mountAccountUI({element,timeoutMs:5,fetchImpl:(_url,{signal})=>new Promise((_resolve,reject)=>signal.addEventListener('abort',()=>{aborted=true;reject(Error('aborted'));}))});
+ await ui.ready; assert.equal(aborted,true); assert.match(element.children[0].textContent,/Guest play still works/);ui.dispose();
 });

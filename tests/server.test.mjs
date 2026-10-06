@@ -52,7 +52,7 @@ test('connected form redirects allow only the fixed identity and consent origins
   return Response.json({issuer,authorization_endpoint:issuer+'/oauth/authorize',token_endpoint:issuer+'/oauth/token',jwks_uri:issuer+'/.well-known/jwks.json',response_types_supported:['code'],id_token_signing_alg_values_supported:['ES256']});
  };
  let server;
- try {server=await createGameServer({port:0,connected:true,env:{AM_GAME_CLIENT_ID:'test-only',AM_GAME_CLIENT_SECRET:'not-real',AM_GAME_REDIRECT_URI:'https://game.example/auth/callback'}});}
+ try {server=await createGameServer({port:0,connected:true,env:{AM_PLAYER_ID_KEY:'k'.repeat(32),AM_GAME_CLIENT_ID:'test-only',AM_GAME_CLIENT_SECRET:'not-real',AM_GAME_REDIRECT_URI:'https://game.example/auth/callback'}});}
  finally {globalThis.fetch=originalFetch;}
  t.after(()=>new Promise(r=>server.close(r)));assert.equal(discoveryRequests,1);
  const headers=await new Promise((resolve,reject)=>get('http://127.0.0.1:'+server.address().port+'/',{headers:{host:'game.example'}},response=>{response.resume();resolve(response.headers);}).on('error',reject));
@@ -69,4 +69,13 @@ test('offline policy stays self-only and failed auth returns safe recovery HTML 
  const api=await fetch(origin+'/api/me');assert.match(api.headers.get('content-type'),/application\/json/);
  assert.equal(api.headers.get('referrer-policy'),'no-referrer');
  assert.deepEqual(await api.json(),{signedIn:false,demo:true});
+});
+test('Three.js example serves only allowlisted local browser dependencies',async t=>{
+ const server=await createGameServer({port:0,env:{}});t.after(()=>new Promise(resolve=>server.close(resolve)));
+ const base=`http://127.0.0.1:${server.address().port}`;
+ for(const path of ['/examples/threejs','/examples/threejs.mjs','/vendor/three.module.js','/vendor/three.core.js','/integrations/account-ui.mjs','/integrations/threejs.mjs']){
+  const r=await fetch(base+path);assert.equal(r.status,200,path);if(path.endsWith('.js')||path.endsWith('.mjs'))assert.match(r.headers.get('content-type'),/javascript/);
+ }
+ assert.notEqual((await fetch(base+'/account-client.mjs')).status,200);
+ assert.notEqual((await fetch(base+'/.env')).status,200);
 });

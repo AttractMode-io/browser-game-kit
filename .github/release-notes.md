@@ -17,3 +17,5 @@ A listing request does not grant ownership, a sign-in request does not issue cre
 Source: https://github.com/AttractMode-io/browser-game-kit
 Docs: https://attractmode.io/docs
 Workspace: https://attractmode.io/developers
+
+Stage 1 candidate additions: redacted `npm run doctor`, a locally bundled Three.js scene, bounded account lookups that never block guest gameplay, explicit browser/server package boundaries, and extracted-archive smoke checks. Connected clients require an active platform integration registry entry and a persistent server-only `AM_PLAYER_ID_KEY`; the adapter checks revocation and returns a game-scoped player ID. Deploy the matching platform registry before releasing this connected adapter. See `docs/account-integration.md` for migration requirements.

@@ -15,9 +15,18 @@ jobs:
           node-version: '24'
           cache: npm
       - run: npm ci --ignore-scripts
+      - run: npm run doctor
       - run: npm test
       - run: npm run test:agents
       - run: npm --prefix mcp ci --ignore-scripts
       - run: npm --prefix mcp test
       - run: npm audit --omit=dev --audit-level=high
       - run: npm --prefix mcp audit --omit=dev --audit-level=high
+      - name: Verify clean source ZIP
+        run: |
+          git archive --format=zip --prefix=kit/ HEAD > /tmp/kit.zip
+          unzip -q /tmp/kit.zip -d /tmp/kit-release
+          cd /tmp/kit-release/kit
+          npm ci --ignore-scripts
+          npm run doctor
+          npm run test:release
