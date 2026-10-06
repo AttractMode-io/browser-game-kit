@@ -31,3 +31,7 @@ test('separate Node processes cannot consume the same transaction twice',async()
  assert.deepEqual(results.map(r=>r.stdout.trim()).sort(),['false','true']);
  }finally{rmSync(dir,{recursive:true,force:true});}
 });
+test('production command cannot fall back to demo memory when NODE_ENV is absent',async()=>{
+ const {execFile}=await import('node:child_process');const {promisify}=await import('node:util');const run=promisify(execFile);
+ await assert.rejects(run(process.execPath,[new URL('../production.mjs',import.meta.url).pathname],{env:{}}),error=>error.stderr.includes('Production requires connected mode and durable atomic TTL storage configuration'));
+});

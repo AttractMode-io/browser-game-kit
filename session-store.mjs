@@ -10,7 +10,7 @@ export function createSessionStore({filename,key,clock=Date.now,maxRecords=10000
  try{const fd=openSync(filename,'wx',0o600);closeSync(fd);}catch(e){if(e.code!=='EEXIST')throw e;}
  if(!lstatSync(filename).isFile()||lstatSync(filename).isSymbolicLink())throw Error('Session database must be a regular private file.');chmodSync(filename,0o600);
  const secret=Buffer.from(key,'hex'),db=new DatabaseSync(filename);
- db.exec('PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; PRAGMA busy_timeout=5000; CREATE TABLE IF NOT EXISTS sessions (id TEXT PRIMARY KEY, payload BLOB NOT NULL, expires INTEGER NOT NULL); CREATE INDEX IF NOT EXISTS sessions_expiry ON sessions(expires)');
+ db.exec('PRAGMA busy_timeout=5000; PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; CREATE TABLE IF NOT EXISTS sessions (id TEXT PRIMARY KEY, payload BLOB NOT NULL, expires INTEGER NOT NULL); CREATE INDEX IF NOT EXISTS sessions_expiry ON sessions(expires)');
  db.prepare('DELETE FROM sessions WHERE expires<=?').run(clock());
  const cleanup=setInterval(()=>{try{db.prepare('DELETE FROM sessions WHERE expires<=?').run(clock());}catch{}},60000);cleanup.unref();
  const encode=(id,value,expires)=>{const iv=randomBytes(12),cipher=createCipheriv('aes-256-gcm',secret,iv);cipher.setAAD(Buffer.from(JSON.stringify([id,expires])));return Buffer.concat([iv,cipher.update(JSON.stringify(value)),cipher.final(),cipher.getAuthTag()]);};

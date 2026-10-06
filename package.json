@@ -19,7 +19,7 @@
     "test:sandbox": "node sandbox/protocol-test.mjs",
     "sandbox:stop": "supabase stop --workdir sandbox",
     "sandbox:dev": "node sandbox/dev.mjs",
-    "start:production": "node --env-file=.env.production server.mjs --connected"
+    "start:production": "node --env-file=.env.production production.mjs"
   },
   "dependencies": {
     "openid-client": "6.8.8",
