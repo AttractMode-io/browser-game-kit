@@ -49,8 +49,10 @@ Restart/reconnect and check that `get_capabilities`, `search_docs` and `read_doc
 | Tool | Input | Result |
 | --- | --- | --- |
 | get_capabilities | none | Release date, supported surfaces, registration requirements and unavailable API list. |
-| search_docs | query, 1–160 characters | Up to eight relevant paragraphs from four fixed documents. |
-| read_doc | integration, skill, agents or mcp | One bundled page. |
+| search_docs | query, 1–160 characters | Up to eight relevant paragraphs from fourteen fixed documents. |
+| read_doc | one of the fourteen document IDs below | One bundled page. |
+
+Document IDs: `production-storage`, `local-sandbox`, `diagnostics`, `package-boundaries`, `integration`, `onboarding`, `request-template`, `skill`, `agents`, `threejs`, `phaser`, `static-frontend`, `troubleshooting`, and `mcp`.
 
 The `onboarding` document explains listing, sign-in and managed-playtest intake. The `request-template` document supplies the offline checklist; it cannot submit anything.
 
@@ -58,7 +60,7 @@ The same pages are MCP resources under `attractmode://docs/…`. `attractmode://
 
 ## Security boundary
 
-The server reads only five hardcoded package assets at startup. No client-controlled filesystem path, shell command, URL fetch, account access, telemetry, credentials, environment inspection or write tool exists. It does not listen on a network port. Tool arguments are schema-validated and search results are bounded. MCP client permissions still apply; read-only annotations describe behavior, not a grant of authority. This package has no production account credentials to expose.
+The server reads only fifteen hardcoded package assets at startup: fourteen documents and the capability manifest. No client-controlled filesystem path, shell command, URL fetch, account access, telemetry, credentials, environment inspection or write tool exists. It does not listen on a network port. Tool arguments are schema-validated and search results are bounded. MCP client permissions still apply; read-only annotations describe behavior, not a grant of authority. This package has no production account credentials to expose.
 
 MCP does not make unimplemented platform APIs available. Achievements, shared XP, payments, subscriptions, revenue sharing and cloud saves are not third-party contracts in this release. A production OAuth client still requires independent registration. Keep this documentation server local; adding a public HTTP gateway needs a separate security design and is outside this kit.
 
