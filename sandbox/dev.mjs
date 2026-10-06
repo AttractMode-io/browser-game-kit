@@ -16,8 +16,9 @@ const api=async(path,body,token=status.SERVICE_ROLE_KEY,method=body?'POST':'GET'
 const password=randomBytes(24).toString('base64url');
 let user,client,gameServer,consentServer,closing=false;
 async function cleanup(){if(closing)return;closing=true;for(const s of [gameServer,consentServer])s?.close();if(client?.client_id)await api('/admin/oauth/clients/'+client.client_id,undefined,undefined,'DELETE').catch(()=>{});if(user?.id)await api('/admin/users/'+user.id,undefined,undefined,'DELETE').catch(()=>{});}
-const page=body=>'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Attract Mode local sandbox</title></head><body><main>'+body+'</main></body></html>';
+const page=body=>'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Attract Mode local sandbox</title><link rel="stylesheet" href="/sandbox.css"></head><body><main>'+body+'</main></body></html>';
 const reply=(res,status,body,type='text/html',extra={})=>{res.writeHead(status,{'Content-Type':type,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'strict-origin','Content-Security-Policy':"default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; form-action 'self' http://127.0.0.1:56421 http://127.0.0.1:56430 http://127.0.0.1:56431; frame-ancestors 'none'; base-uri 'none'",...extra});res.end(body);};
+const sandboxStyle='body{font:16px/1.5 system-ui,sans-serif;margin:0;padding:20px;overflow-wrap:anywhere}main{max-width:680px;margin:auto}button,a{min-height:44px}button{padding:10px 18px;font:inherit;margin:6px 8px 6px 0}a{display:inline-flex;align-items:center}form{margin:20px 0}';
 const pending=new Map();
 try {
  user=await api('/admin/users',{email:`local-${randomBytes(8).toString('hex')}@example.invalid`,password,email_confirm:true});
@@ -29,6 +30,7 @@ try {
  gameServer=createServer(async(req,res)=>{try{
   if(req.headers.host!==new URL(gameOrigin).host||!req.url.startsWith('/')||req.url.startsWith('//'))return reply(res,403,'Invalid host.');
   const url=new URL(req.url,gameOrigin);
+  if(req.method==='GET'&&url.pathname==='/sandbox.css')return reply(res,200,sandboxStyle,'text/css');
   if(req.method==='GET'&&url.pathname==='/')return reply(res,200,page('<h1>Real local OAuth sandbox</h1><p>Only disposable local identities are used. This is not a production Attract Mode account.</p><aside id="account"></aside><p><a href="/">Refresh account status</a></p><p>The local test player is pre-signed into the isolated provider. Choose Allow or Deny at consent.</p><script type="module" src="/sandbox-ui.mjs"></script>'));
   if(req.method==='GET'&&url.pathname==='/signin-result')return reply(res,200,page('<h1>Sign-in did not finish</h1><p>Access was declined, the request expired, or it could not be verified. You can keep playing without signing in.</p><p><a href="/">Return to the local game</a></p>'));
   if(req.method==='GET'&&url.pathname==='/sandbox-ui.mjs')return reply(res,200,"import {mountAccountUI} from '/account-ui.mjs';mountAccountUI({element:document.querySelector('#account')});",'text/javascript');
@@ -43,6 +45,7 @@ try {
  consentServer=createServer(async(req,res)=>{try{
   if(req.headers.host!==new URL(consentOrigin).host||!req.url.startsWith('/')||req.url.startsWith('//'))return reply(res,403,'Invalid host.');
   const url=new URL(req.url,consentOrigin);
+  if(req.method==='GET'&&url.pathname==='/sandbox.css')return reply(res,200,sandboxStyle,'text/css');
   if(url.pathname!=='/oauth/consent')return reply(res,404,'Not found.');
   const id=url.searchParams.get('authorization_id');if(!/^[A-Za-z0-9_-]{10,200}$/.test(id||''))return reply(res,400,'Invalid authorization.');
   if(req.method==='GET'){
