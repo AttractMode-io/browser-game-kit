@@ -11,7 +11,7 @@ export async function createGameServer({ connected = false, port = 3000, env = p
   if (env.NODE_ENV === 'production') throw Error('Use a production adapter with durable atomic TTL storage; this server is development-only.');
   if (connected && env.AM_ENVIRONMENT && env.AM_ENVIRONMENT !== 'production') throw Error('No isolated sandbox issuer is configured. Use the offline simulation or an approved production registration.');
   const mock = connected ? null : createMockAccount();
-  const client = connected ? await configureAccountClient({ clientId:env.AM_GAME_CLIENT_ID,clientSecret:env.AM_GAME_CLIENT_SECRET,redirectUri:env.AM_GAME_REDIRECT_URI,playerIdKey:env.AM_PLAYER_ID_KEY }) : mock.client;
+  const client = connected ? await configureAccountClient({ clientId:env.AM_GAME_CLIENT_ID,clientSecret:env.AM_GAME_CLIENT_SECRET,redirectUri:env.AM_GAME_REDIRECT_URI,playerIdKey:env.AM_PLAYER_ID_KEY,gameId:env.AM_GAME_ID }) : mock.client;
   const handle = createDemoHandler({ client });
   let windowStart = Date.now(), authRequests = 0;
   const server = createServer(async (req,res) => {

@@ -15,6 +15,6 @@ test('online doctor uses only fixed public endpoint and redacts remote errors',a
  assert.equal(report.ok,false);assert.doesNotMatch(JSON.stringify(report),/SECRET/);
 });
 test('valid connected format never claims registration has been checked',async()=>{
- const report=await diagnose({connected:true,env:{AM_PLAYER_ID_KEY:'k'.repeat(32),AM_GAME_CLIENT_ID:'id',AM_GAME_CLIENT_SECRET:'secret',AM_GAME_REDIRECT_URI:'https://game.example/auth/callback'}});
+ const report=await diagnose({connected:true,env:{AM_GAME_ID:'game',AM_PLAYER_ID_KEY:'k'.repeat(32),AM_GAME_CLIENT_ID:'id',AM_GAME_CLIENT_SECRET:'secret',AM_GAME_REDIRECT_URI:'https://game.example/auth/callback'}});
  assert.equal(report.ok,true);assert.equal(report.checks.find(c=>c.code==='REGISTRATION_REVIEW').status,'manual');
 });

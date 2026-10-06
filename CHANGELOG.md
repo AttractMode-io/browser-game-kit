@@ -2,6 +2,8 @@
 
 ## Unreleased Stage 1 foundation
 
+- Added reproducible isolated local Supabase OAuth protocol tests with disposable identities.
+- Added real locally bundled Three.js scene and active-registration enforcement with scoped player IDs.
 - Added redacted local/optional public-connectivity doctor with explicit registration checks.
 - Added browser/server package boundaries and session lookup cancellation/timeouts.
 - Added extracted ZIP smoke checks and documentation MCP guides.

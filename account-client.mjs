@@ -8,6 +8,7 @@ export async function configureAccountClient({
   clientSecret,
   redirectUri,
   playerIdKey,
+  gameId,
 }) {
   if (!clientId || !clientSecret)
     throw Error('Use the client registration supplied for your game.');
@@ -19,7 +20,7 @@ export async function configureAccountClient({
     { client_secret: clientSecret, id_token_signed_response_alg: 'ES256' },
     oidc.ClientSecretPost(clientSecret),
   );
-  return createAccountClient({ configuration, redirectUri, registrationCheck: createRegistrationCheck(clientId), playerIdKey });
+  return createAccountClient({ configuration, redirectUri, registrationCheck: createRegistrationCheck(clientId, globalThis.fetch, gameId), playerIdKey });
 }
 export function createAccountClient({
   configuration,
@@ -27,7 +28,10 @@ export function createAccountClient({
   clock = Date.now,
   registrationCheck,
   playerIdKey,
+  expectedIssuer = issuer,
 }) {
+  const localTest = expectedIssuer === 'http://127.0.0.1:56421/auth/v1';
+  if (expectedIssuer !== issuer && !localTest) throw Error('Unsupported identity issuer.');
   const callback = new URL(redirectUri);
   if (
     callback.protocol !== 'https:' ||
@@ -40,15 +44,15 @@ export function createAccountClient({
     throw Error('Register an exact HTTPS /auth/callback URL.');
   const metadata = configuration.serverMetadata();
   if (
-    metadata.issuer !== issuer ||
+    metadata.issuer !== expectedIssuer ||
     configuration.clientMetadata().id_token_signed_response_alg !== 'ES256'
   )
     throw Error('Unexpected identity configuration.');
   for (const name of ['authorization_endpoint', 'token_endpoint', 'jwks_uri']) {
     const endpoint = new URL(metadata[name]);
     if (
-      endpoint.origin !== new URL(issuer).origin ||
-      endpoint.protocol !== 'https:' ||
+      endpoint.origin !== new URL(expectedIssuer).origin ||
+      (endpoint.protocol !== 'https:' && !localTest) ||
       endpoint.username ||
       endpoint.password ||
       endpoint.hash
@@ -126,14 +130,14 @@ export function createAccountClient({
       if (
         typeof claims?.sub !== 'string' ||
         !claims.sub ||
-        claims.iss !== issuer
+        claims.iss !== expectedIssuer
       )
         throw Error('Verified account identity required.');
       const registration = registrationCheck ? await registrationCheck() : null;
       const playerId = registration ? derivePlayerId(playerIdKey, registration, claims.sub) : undefined;
       // Tokens never leave this backend adapter. No unnecessary refresh/offline token is retained.
       return {
-        issuer,
+        issuer: expectedIssuer,
         subject: claims.sub,
         ...(registration ? {playerId, gameId: registration.gameId, environment: registration.environment} : {}),
         expires: Math.min(clock() + 3600000, claims.exp * 1000),
@@ -143,8 +147,9 @@ export function createAccountClient({
 }
 
 // Fixed public registry endpoint. No access token, subject or client secret is sent.
-export function createRegistrationCheck(clientId, fetchImpl = globalThis.fetch) {
+export function createRegistrationCheck(clientId, fetchImpl = globalThis.fetch, expectedGameId) {
   if (typeof clientId !== 'string' || !clientId || clientId.length > 256) throw Error('Invalid client ID.');
+  if (typeof expectedGameId !== 'string' || !expectedGameId || expectedGameId.length > 256) throw Error('Configure the approved AM_GAME_ID.');
   return async () => {
     const url = new URL('https://attractmode.io/api/integration-status');
     url.searchParams.set('client_id', clientId);
@@ -152,7 +157,7 @@ export function createRegistrationCheck(clientId, fetchImpl = globalThis.fetch) 
       const r = await fetchImpl(url, {redirect:'error',cache:'no-store',signal:AbortSignal.timeout(5000)});
       if (!r.ok) throw Error();
       const value = await r.json();
-      if (value.active !== true || value.environment !== 'production' || typeof value.gameId !== 'string' || !value.gameId || value.gameId.length > 256) throw Error();
+      if (value.active !== true || value.environment !== 'production' || value.gameId !== expectedGameId) throw Error();
       return {gameId:value.gameId,environment:value.environment};
     } catch {throw Error('Game integration is inactive or its status could not be verified.');}
   };

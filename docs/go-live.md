@@ -12,7 +12,7 @@ Page verification and OAuth registration are separate. A verified listing does n
 
 ## 3. Try a connected development session
 
-After registration, copy `.env.example` to `.env`. Set your client ID, client secret, persistent random `AM_PLAYER_ID_KEY` and the exact registered HTTPS redirect URI. Keep the player ID key unchanged across OAuth-secret rotations. Confirm the integration registry endpoint is live and your client is active. This file is ignored by Git. Keep it out of uploads, logs, screenshots, chats and browser bundles.
+After registration, copy `.env.example` to `.env`. Set your approved `AM_GAME_ID`, client ID, client secret, persistent random `AM_PLAYER_ID_KEY` and the exact registered HTTPS redirect URI. Keep the player ID key unchanged across OAuth-secret rotations. Confirm the integration registry endpoint is live and your client is active. This file is ignored by Git. Keep it out of uploads, logs, screenshots, chats and browser bundles.
 
 Run `npm run start:connected`. The server still listens on loopback. Put a trusted HTTPS reverse proxy in front of it for your registered development origin and preserve that origin's Host header. Forward `/`, the two static game assets, `/auth/*` and `/api/me`. Do not expose the raw loopback port publicly or trust arbitrary forwarded headers. Configure certificates and the registered domain normally; do not disable TLS checks.
 

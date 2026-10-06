@@ -13,6 +13,7 @@ export async function diagnose({ env = process.env, connected = false, online = 
   else {
     add('ENVIRONMENT', (!env.AM_ENVIRONMENT || env.AM_ENVIRONMENT === 'production') ? 'pass' : 'fail', 'Connected mode currently supports approved production registration only. An isolated hosted sandbox issuer is not configured.');
     add('CLIENT_REGISTRATION', env.AM_GAME_CLIENT_ID?.trim() && env.AM_GAME_CLIENT_SECRET?.trim() ? 'pass' : 'fail', 'Set the approved client ID and server-only secret in your local environment. Presence does not verify registration.');
+    add('GAME_ID', env.AM_GAME_ID?.trim() ? 'pass' : 'fail', 'Set this game’s approved registry ID. Connected status must match this exact game.');
     add('PLAYER_ID_KEY', env.AM_PLAYER_ID_KEY && Buffer.byteLength(env.AM_PLAYER_ID_KEY) >= 32 ? 'pass' : 'fail', 'Set a persistent server-only player ID key with at least 32 bytes. Back it up securely; changing it changes game-scoped IDs.');
     let valid = false;
     try { const u = new URL(env.AM_GAME_REDIRECT_URI); valid = u.protocol === 'https:' && u.pathname === '/auth/callback' && !u.search && !u.hash && !u.username && !u.password; } catch {}

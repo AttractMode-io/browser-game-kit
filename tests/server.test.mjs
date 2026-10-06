@@ -52,7 +52,7 @@ test('connected form redirects allow only the fixed identity and consent origins
   return Response.json({issuer,authorization_endpoint:issuer+'/oauth/authorize',token_endpoint:issuer+'/oauth/token',jwks_uri:issuer+'/.well-known/jwks.json',response_types_supported:['code'],id_token_signing_alg_values_supported:['ES256']});
  };
  let server;
- try {server=await createGameServer({port:0,connected:true,env:{AM_PLAYER_ID_KEY:'k'.repeat(32),AM_GAME_CLIENT_ID:'test-only',AM_GAME_CLIENT_SECRET:'not-real',AM_GAME_REDIRECT_URI:'https://game.example/auth/callback'}});}
+ try {server=await createGameServer({port:0,connected:true,env:{AM_GAME_ID:'game',AM_PLAYER_ID_KEY:'k'.repeat(32),AM_GAME_CLIENT_ID:'test-only',AM_GAME_CLIENT_SECRET:'not-real',AM_GAME_REDIRECT_URI:'https://game.example/auth/callback'}});}
  finally {globalThis.fetch=originalFetch;}
  t.after(()=>new Promise(r=>server.close(r)));assert.equal(discoveryRequests,1);
  const headers=await new Promise((resolve,reject)=>get('http://127.0.0.1:'+server.address().port+'/',{headers:{host:'game.example'}},response=>{response.resume();resolve(response.headers);}).on('error',reject));

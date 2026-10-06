@@ -32,6 +32,8 @@ Run `npm run doctor` for a redacted setup report. Add `-- --online` to check the
 
 A runnable Three.js scene is also at **http://127.0.0.1:3000/examples/threejs**. Its render loop starts without waiting for sign-in.
 
+For a real isolated OAuth protocol test with disposable identities, use the [local Supabase sandbox](docs/local-sandbox.md). It requires Docker; it is separate from the instant offline demo.
+
 ## Choose your next step
 
 | You want to… | Start here |

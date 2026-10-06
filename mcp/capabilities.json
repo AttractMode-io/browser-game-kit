@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "verifiedAt": "2026-10-05",
+  "verifiedAt": "2026-10-06",
   "releaseScope": "This bundled release; not a live API status probe",
   "officialRepository": "https://github.com/AttractMode-io/browser-game-kit",
   "capabilities": [
@@ -9,6 +9,18 @@
       "status": "registration_required",
       "surface": "OIDC backend adapter",
       "description": "Mock works locally. Production sign-in requires separately approved client, exact callbacks and explicit third-party consent."
+    },
+    {
+      "id": "local-oauth-sandbox",
+      "status": "local_development",
+      "surface": "npm run test:sandbox",
+      "description": "Docker and Supabase CLI run an isolated real OAuth protocol test with disposable local users and clients. Not a hosted sandbox or a production client pilot."
+    },
+    {
+      "id": "diagnostics",
+      "status": "available_in_kit",
+      "surface": "npm run doctor",
+      "description": "Redacted local setup checks and optional fixed public connectivity check. Does not grant registration or inspect private credentials."
     },
     {
       "id": "catalog-community",
