@@ -1,6 +1,6 @@
 # Integration contract
 
-Updated for the Stage 1 release candidate on October 6, 2026. Check the current release before assuming a new capability exists. Official source: https://github.com/AttractMode-io/browser-game-kit. Platform: https://attractmode.io/developers.
+Updated for the 0.3.0 early-access release on October 6, 2026. Check the current release before assuming a new capability exists. Official source: https://github.com/AttractMode-io/browser-game-kit. Platform: https://attractmode.io/developers.
 
 ## What is available
 
@@ -31,7 +31,7 @@ The game session expires at the earlier of identity-token expiry and one hour. E
 
 Available on the Attract Mode website: catalog game/studio pages, reviewed ownership claims and corrections, private game saves/studio follows, moderated reviews and scoped developer measurement. These site features do not grant API access or player information to an arbitrary game.
 
-Not provided as third-party APIs in this kit: achievements, shared XP, playtime reporting, payments, subscription entitlements, revenue sharing, cloud saves or in-game community. A click is not gameplay; a login is not playtime; browser-submitted XP is not trusted. Do not synthesize endpoints or present roadmap items as released capabilities.
+Cloud saves, achievements, game XP and statistics use the separately scoped early-access contract in progression.md. Not provided: shared XP, playtime reporting, payments, subscription entitlements, revenue sharing or in-game community. A click is not gameplay; a login is not playtime; browser-submitted XP is not trusted. Do not synthesize endpoints or present roadmap items as released capabilities.
 
 
 ## Stage 1 adapter contract

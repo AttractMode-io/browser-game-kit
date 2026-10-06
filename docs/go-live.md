@@ -56,4 +56,4 @@ Send the deployment URL and test evidence to the Attract Mode team. Listing, cli
 | Unknown client or redirect | Confirm the approved client and exact callback with Attract Mode. Never borrow another game's credentials. |
 | Signed out after server restart | Expected in the demo. Production requires durable session storage. |
 | Static site cannot hide client secret | Add a backend-for-frontend. A build-time frontend variable does not protect a secret. |
-| Payment/achievement tool unavailable | Those third-party APIs are not available in this kit. Do not substitute internal website endpoints. |
+| Progression credential missing | Request a separately scoped credential for an approved integration. Login alone does not authorize progression. Payments remain unavailable; never substitute internal website endpoints. |

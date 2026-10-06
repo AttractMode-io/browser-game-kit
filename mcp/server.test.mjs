@@ -14,12 +14,12 @@ async function local(t) {
  t.after(async()=>{await client.close();await server.close();});
  return client;
 }
-test('SDK discovery exposes only three read-only tools and fifteen fixed resources',async t=>{
+test('SDK discovery exposes only three read-only tools and sixteen fixed resources',async t=>{
  const client=await local(t);
  const {tools}=await client.listTools();
  assert.deepEqual(tools.map(t=>t.name).sort(),['get_capabilities','read_doc','search_docs']);
  for(const tool of tools){assert.equal(tool.annotations.readOnlyHint,true);assert.equal(tool.annotations.openWorldHint,false);}
- const {resources}=await client.listResources(); assert.equal(resources.length,15);
+ const {resources}=await client.listResources(); assert.equal(resources.length,16);
  for(const resource of resources){const result=await client.readResource({uri:resource.uri});assert.ok(result.contents[0].text.length>50);}
 });
 test('capability manifest explicitly bounds production and unavailable APIs',async t=>{
@@ -27,7 +27,9 @@ test('capability manifest explicitly bounds production and unavailable APIs',asy
  const result=await client.callTool({name:'get_capabilities',arguments:{}});
  const manifest=JSON.parse(result.content[0].text);
  assert.equal(manifest.capabilities.find(c=>c.id==='accounts').status,'registration_required');
- for(const id of ['payments','achievements','shared-xp','cloud-saves']) assert.equal(manifest.capabilities.find(c=>c.id===id).status,'not_available_in_kit');
+ for(const id of ['payments','shared-xp']) assert.equal(manifest.capabilities.find(c=>c.id===id).status,'not_available_in_kit');
+ for(const id of ['achievements','cloud-saves'])assert.equal(manifest.capabilities.find(c=>c.id===id).status,'early_access_registration_required');
+ assert.equal(manifest.progression.externalHostedPilotCompleted,false);
 });
 test('search finds contract and bounds output without regex interpretation',async t=>{
  const client=await local(t);

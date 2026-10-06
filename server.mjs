@@ -1,3 +1,5 @@
+import { Readable } from 'node:stream';
+import {createProgressionBridge,createProgressionTransport} from './progression-server.mjs';
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -6,15 +8,19 @@ import { createDemoHandler } from './demo-handler.mjs';
 import { createMockAccount, mockOrigin } from './mock-account.mjs';
 
 // A single-process development server, not a production hosting adapter.
-export async function createGameServer({ connected = false, port = 3000, env = process.env } = {}) {
+export async function createGameServer({ connected = false, port = 3000, env = process.env, progression } = {}) {
   if (!Number.isInteger(port) || port < 0 || port > 65535) throw Error('Invalid port');
   const production=env.NODE_ENV==='production';
   if(production&&(!connected||!env.AM_SESSION_DB||!env.AM_SESSION_KEY))throw Error('Production requires connected mode and durable atomic TTL storage configuration.');
   if (connected && env.AM_ENVIRONMENT && env.AM_ENVIRONMENT !== 'production') throw Error('No isolated sandbox issuer is configured. Use the offline simulation or an approved production registration.');
+  if(!connected&&env.AM_PROGRESSION_ENABLED==='true')throw Error('Offline account simulation cannot use a remote progression service');
+  if(progression&&(!progression.localFixture||production||connected))throw Error('Injected progression is isolated fixture mode only');
   const mock = connected ? null : createMockAccount();
   const client = connected ? await configureAccountClient({ clientId:env.AM_GAME_CLIENT_ID,clientSecret:env.AM_GAME_CLIENT_SECRET,redirectUri:env.AM_GAME_REDIRECT_URI,playerIdKey:env.AM_PLAYER_ID_KEY,gameId:env.AM_GAME_ID }) : mock.client;
   const store=production?(await import('./session-store.mjs')).createSessionStore({filename:env.AM_SESSION_DB,key:env.AM_SESSION_KEY}):undefined;
-  const handle = createDemoHandler({ client, returnPaths:['/','/examples/threejs'], ...(store?{store}:{}) });
+  const handle = createDemoHandler({ client, returnPaths:['/','/examples/threejs','/examples/progression-connected'], ...(store?{store}:{}) });
+  const executeProgression=progression?.execute||(connected&&env.AM_PROGRESSION_ENABLED==='true'?createProgressionTransport({enabled:true,endpoint:env.AM_PROGRESSION_ENDPOINT,credential:env.AM_PROGRESSION_CREDENTIAL}):null);
+  const progressionHandler=executeProgression?createProgressionBridge({origin:client.origin,resolveSession:handle.resolveProgressionSession,execute:executeProgression}):null;
   let windowStart = Date.now(), authRequests = 0;
   const server = createServer(async (req,res) => {
     const localOrigin = 'http://127.0.0.1:'+server.address().port;
@@ -31,7 +37,7 @@ export async function createGameServer({ connected = false, port = 3000, env = p
       if (req.method !== 'GET' && req.method !== 'POST') return reply(405,'Method not allowed');
       if (req.method==='POST' && req.headers.origin!==publicOrigin) return reply(403,'Wrong origin');
       const length = Number(req.headers['content-length'] || 0);
-      if (req.headers['transfer-encoding'] || !Number.isFinite(length) || length>4096) return reply(413,'Request too large');
+      if (req.headers['transfer-encoding'] || !Number.isFinite(length) || length>(url.pathname==='/api/game-progression'?70000:4096)) return reply(413,'Request too large');
       if (url.pathname.startsWith('/auth/') || url.pathname.startsWith('/mock/')) {
         if (Date.now()-windowStart>60000) { windowStart=Date.now();authRequests=0; }
         if (++authRequests>60) return reply(429,'Too many authentication attempts. Try again shortly.',{'Retry-After':'60'});
@@ -40,18 +46,24 @@ export async function createGameServer({ connected = false, port = 3000, env = p
         const callback = mock.authorize(url);
         return reply(303,'',{'Location':callback.replace(mockOrigin,localOrigin)});
       }
-      const assets = { '/examples/threejs':'examples/threejs.html','/examples/threejs.mjs':'examples/threejs.mjs','/integrations/threejs.mjs':'integrations/threejs.mjs','/integrations/account-ui.mjs':'integrations/account-ui.mjs','/vendor/three.module.js':'node_modules/three/build/three.module.js','/vendor/three.core.js':'node_modules/three/build/three.core.js','/':'index.html','/game.mjs':'game.mjs','/sample.css':'sample.css' };
+      const assets = { '/examples/progression-connected':'examples/progression-connected.html','/examples/progression-connected.mjs':'examples/progression-connected.mjs','/integrations/progression-panel.mjs':'integrations/progression-panel.mjs','/integrations/progression.mjs':'integrations/progression.mjs','/integrations/progression-ui.mjs':'integrations/progression-ui.mjs','/integrations/progression-ui.css':'integrations/progression-ui.css', '/examples/threejs':'examples/threejs.html','/examples/threejs.mjs':'examples/threejs.mjs','/integrations/threejs.mjs':'integrations/threejs.mjs','/integrations/account-ui.mjs':'integrations/account-ui.mjs','/vendor/three.module.js':'node_modules/three/build/three.module.js','/vendor/three.core.js':'node_modules/three/build/three.core.js','/':'index.html','/game.mjs':'game.mjs','/sample.css':'sample.css' };
       if (req.method==='GET' && Object.hasOwn(assets,url.pathname)) {
         let body = await readFile(new URL(assets[url.pathname],import.meta.url),'utf8');
         if (url.pathname==='/') body=body.replace('<main>', '<main><p class="mode-notice">'+(connected ? 'Connected account mode. Real Attract Mode sign-in.' : 'OFFLINE DEMO. No real account, credentials or internet access needed. The sign-in simulation uses a local test identity.')+'</p>');
         if (!connected && url.pathname==='/') body=body.replace('Sign in with Attract Mode','Simulate sign-in (offline)');
         // Documents retain Origin on same-origin form POSTs without sharing URL paths.
         // Private /auth and /api responses keep the default no-referrer policy.
-        return reply(200,body,{...((url.pathname==='/'||url.pathname==='/examples/threejs')?{'Referrer-Policy':'strict-origin'}:{}),'Content-Type':(url.pathname.endsWith('.mjs')||url.pathname.endsWith('.js'))?'text/javascript; charset=utf-8':url.pathname.endsWith('.css')?'text/css; charset=utf-8':'text/html; charset=utf-8'});
+        return reply(200,body,{...((url.pathname==='/'||url.pathname==='/examples/threejs'||url.pathname==='/examples/progression-connected')?{'Referrer-Policy':'strict-origin'}:{}),'Content-Type':(url.pathname.endsWith('.mjs')||url.pathname.endsWith('.js'))?'text/javascript; charset=utf-8':url.pathname.endsWith('.css')?'text/css; charset=utf-8':'text/html; charset=utf-8'});
       }
       const requestHeaders = new Headers();
       if (req.headers.cookie) requestHeaders.set('cookie', connected ? req.headers.cookie : req.headers.cookie.replaceAll('am-demo-flow=','__Host-am-game-flow=').replaceAll('am-demo-session=','__Host-am-game-session='));
       if (req.headers.origin) requestHeaders.set('origin',connected?req.headers.origin:client.origin);
+      if(url.pathname==='/api/game-progression'){
+        if(!progressionHandler)return reply(503,JSON.stringify({error:'Stage 2 progression is not enabled'}),{'Content-Type':'application/json'});
+        requestHeaders.set('content-type',req.headers['content-type']||'');
+        const response=await progressionHandler(new Request(client.origin+url.pathname,{method:req.method,headers:requestHeaders,...(req.method==='POST'?{body:Readable.toWeb(req),duplex:'half'}:{})}));
+        return reply(response.status,await response.text(),Object.fromEntries(response.headers));
+      }
       const response = await handle(new Request(client.origin+url.pathname+url.search,{method:req.method,headers:requestHeaders}));
       const extra = Object.fromEntries(response.headers);
       delete extra['set-cookie'];

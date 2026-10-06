@@ -62,7 +62,7 @@ The same pages are MCP resources under `attractmode://docs/…`. `attractmode://
 
 The server reads only fifteen hardcoded package assets at startup: fourteen documents and the capability manifest. No client-controlled filesystem path, shell command, URL fetch, account access, telemetry, credentials, environment inspection or write tool exists. It does not listen on a network port. Tool arguments are schema-validated and search results are bounded. MCP client permissions still apply; read-only annotations describe behavior, not a grant of authority. This package has no production account credentials to expose.
 
-MCP does not make unimplemented platform APIs available. Achievements, shared XP, payments, subscriptions, revenue sharing and cloud saves are not third-party contracts in this release. A production OAuth client still requires independent registration. Keep this documentation server local; adding a public HTTP gateway needs a separate security design and is outside this kit.
+MCP does not make unimplemented platform APIs available. Cloud saves, achievements, game XP and statistics require an approved integration and scoped server credentials; read the progression guide. Shared XP, payments, subscriptions and revenue sharing remain unavailable. A production OAuth client still requires independent registration. Keep this documentation server local; adding a public HTTP gateway needs a separate security design and is outside this kit.
 
 [Official MCP server documentation](https://modelcontextprotocol.io/docs/develop/build-server) and the official TypeScript SDK are the protocol references. Transport tests use an actual SDK client and child-process stdio, not hand-written protocol mocks.
 

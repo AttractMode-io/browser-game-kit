@@ -1,6 +1,6 @@
 {
   "name": "@attractmode/browser-game-kit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "description": "A runnable browser game with a server-side Attract Mode account integration",
@@ -52,6 +52,13 @@
     },
     "./session-store": {
       "node": "./session-store.mjs"
-    }
+    },
+    "./progression": "./integrations/progression.mjs",
+    "./progression-server": {
+      "node": "./progression-server.mjs"
+    },
+    "./progression-ui": "./integrations/progression-ui.mjs",
+    "./progression-ui.css": "./integrations/progression-ui.css",
+    "./progression-panel": "./integrations/progression-panel.mjs"
   }
 }

@@ -68,7 +68,7 @@ The sample intentionally does not provide a new static browser SDK. A purely sta
 
 A catalog Play click means a visitor clicked the outbound link. It is not evidence of gameplay, a completed session, hours, XP, purchases or retention. A successful OAuth sign-in proves an identity grant, not that the player played. A verified claim proves scoped page authority, not access to platform users or revenue.
 
-Future gameplay reporting needs a separate approved event contract: game/client identity, player consent, server-verifiable event source, event IDs and replay protection, timestamps/duration bounds, abuse controls, retention/deletion and explicit platform authorization. Client-supplied XP or claimed hours must never directly change a platform balance. Do not invent endpoints for achievements, entitlements, billing or shared saves. None is granted by this sample.
+Progression uses a separate approved event contract described in progression.md: game/client identity, player consent, server-verifiable event source, event IDs and replay protection, timestamps/duration bounds, abuse controls, retention/deletion and explicit platform authorization. Client-supplied XP or claimed hours must never directly change a platform balance. Do not invent endpoints for achievements, entitlements, billing or shared saves. None is granted by this sample.
 
 Before a Connected badge, submit evidence for real registration, new/returning login, enabled social providers, consent acceptance/denial, account switching, mobile Safari/Chrome, expired/replayed authorization and logout. This kit's mock tests are **not** a completed third-party pilot.
 
@@ -78,7 +78,7 @@ Serve `index.html`, `game.mjs` and `sample.css` from the registered game's HTTPS
 
 ## Registry and game-scoped player identity
 
-The Stage 1 candidate adapter checks `GET https://attractmode.io/api/integration-status?client_id=...` before starting login, after callback verification and before serving an authenticated `/api/me`. This public status check contains no player information. Revoked, inactive, wrong-environment and unreachable registrations fail closed; guest gameplay remains available. Deploy this adapter only after the corresponding registry endpoint is live and your registration is active. Do not skip that check in production to make an unregistered client work.
+The account adapter checks `GET https://attractmode.io/api/integration-status?client_id=...` before starting login, after callback verification and before serving an authenticated `/api/me`. This public status check contains no player information. Revoked, inactive, wrong-environment and unreachable registrations fail closed; guest gameplay remains available. Deploy this adapter only after the corresponding registry endpoint is live and your registration is active. Do not skip that check in production to make an unregistered client work.
 
 Configure a persistent random `AM_PLAYER_ID_KEY` on the backend, independent from your OAuth secret. The adapter derives a stable player ID with HMAC-SHA256 over game, environment, issuer and provider subject. Connected `/api/me` returns the game-scoped ID rather than the provider subject. Back up this key securely. Rotating it changes IDs and requires an explicit migration, while rotating the OAuth secret does not. This mapping identifies a player; it is not evidence of earned XP or achievements.
 

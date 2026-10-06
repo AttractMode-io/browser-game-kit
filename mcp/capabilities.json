@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "verifiedAt": "2026-10-06",
-  "releaseScope": "This bundled release; not a live API status probe",
+  "releaseScope": "Bundled 0.3.0 early-access contract; not a live account eligibility or service status probe.",
   "officialRepository": "https://github.com/AttractMode-io/browser-game-kit",
   "capabilities": [
     {
@@ -42,9 +42,9 @@
     },
     {
       "id": "achievements",
-      "status": "not_available_in_kit",
-      "surface": null,
-      "description": "No supported third-party API contract shipped in this release."
+      "status": "early_access_registration_required",
+      "surface": "Scoped backend progression API",
+      "description": "Approved registration and separately issued server credentials required. See docs/progression.md. External hosted pilot remains outstanding."
     },
     {
       "id": "shared-xp",
@@ -78,12 +78,18 @@
     },
     {
       "id": "cloud-saves",
-      "status": "not_available_in_kit",
-      "surface": null,
-      "description": "No supported third-party API contract shipped in this release."
+      "status": "early_access_registration_required",
+      "surface": "Scoped backend progression API",
+      "description": "Approved registration and separately issued server credentials required. See docs/progression.md. External hosted pilot remains outstanding."
+    },
+    {
+      "id": "game-xp-statistics-leaderboards",
+      "status": "early_access_registration_required",
+      "surface": "Scoped backend progression API",
+      "description": "Game-scoped XP, statistics and provenance-separated leaderboards. No global reputation. Browser-reported results remain unverified."
     }
   ],
-  "kitVersion": "0.2.0",
+  "kitVersion": "0.3.0",
   "launchConfiguration": {
     "status": "reviewed_configuration",
     "workspace": "https://attractmode.io/developers?task=sign_in",
@@ -101,5 +107,20 @@
     ],
     "hostedService": false,
     "productionCredentialsRequired": false
+  },
+  "progression": {
+    "status": "early_access_registration_required",
+    "documentation": "docs/progression.md",
+    "features": [
+      "versioned-cloud-saves",
+      "game-xp",
+      "achievements",
+      "statistics",
+      "provenance-separated-leaderboards"
+    ],
+    "trustedEventsRequire": "server-held scoped credential and gameplay validation",
+    "globalReputation": false,
+    "productionAccess": "Approved registration and scoped credential required",
+    "externalHostedPilotCompleted": false
   }
 }

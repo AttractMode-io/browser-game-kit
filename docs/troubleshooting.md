@@ -12,6 +12,6 @@ Start with the offline demo. It separates local setup problems from live registr
 | Sign-in expires or cannot finish | Start again from the game's login form. Do not reuse a callback, remove state validation or retry an old code. Check exact callback registration, cookie handling and server clock. |
 | Login or logout returns 403 | Check the registered public origin and the native same-origin form POST. Do not disable Origin checks. |
 | The server refuses production mode | Configure connected mode and the encrypted single-host store; see production-storage.md. Never fall back to memory. |
-| Login works but achievements or payments do not | This kit does not supply those public APIs. Check the capability manifest instead of guessing endpoints. |
+| Login works but progression does not | Progression requires a separate scoped credential and enabled backend bridge. Read progression.md; account login alone does not enable it. Payments remain unavailable. |
 
 For a reproducible bug, include the kit version, Node version, sanitized route/status, whether you used offline or connected mode, and the smallest steps that reproduce it in a [GitHub issue](https://github.com/AttractMode-io/browser-game-kit/issues). For security concerns use [SECURITY.md](../SECURITY.md).

@@ -75,7 +75,7 @@ The installer only copies the bundled skill into that project's documented skill
 - **Catalog and community on Attract Mode:** game/studio pages, verified claims, moderated reviews, saves and follows are website features. They are not general-purpose APIs supplied by this kit.
 - **Agent tooling:** a versioned integration skill and read-only local docs MCP.
 
-Achievements, shared XP, playtime reporting, cloud saves, payments, subscriptions and revenue sharing are **not third-party APIs in this release**. Do not infer them from an account login or build against guessed endpoints. [The public capability contract](https://attractmode.io/developer-capabilities.json) records the current surface.
+Cloud saves, achievements, game XP and statistics are early access through separately scoped credentials; see [progression setup](docs/progression.md). Shared XP, playtime reporting, payments, subscriptions and revenue sharing are **not third-party APIs in this release**. Do not infer them from an account login or build against guessed endpoints. [The public capability contract](https://attractmode.io/developer-capabilities.json) records the current surface.
 
 Upgrading a connected 0.1.x game? Read [the 0.2 migration guide](docs/migration-0.2.md) before changing player identifiers.
 
@@ -118,3 +118,7 @@ For reproducible kit bugs, [open an issue](https://github.com/AttractMode-io/bro
 Releases include a named ZIP and SHA-256 checksum. GitHub also provides its normal source archives. Pin a release tag when you want a repeatable integration; `main` may contain newer changes. See [CONTRIBUTING.md](CONTRIBUTING.md) for changes and [CHANGELOG.md](CHANGELOG.md) for releases.
 
 MIT licensed code. Attract Mode names and logo assets remain Attract Mode branding; this kit does not grant a partnership or connected-game badge.
+
+## Progression early access
+
+Version 0.3.0 adds cloud-save conflict handling, game XP and achievements, leaderboard displays and server validation recipes. Access is limited to approved integrations with scoped server credentials. Start with [the progression integration guide](docs/progression.md). An external hosted production pilot has not yet been completed. A browser assertion never becomes a verified result merely because it passes through a backend.

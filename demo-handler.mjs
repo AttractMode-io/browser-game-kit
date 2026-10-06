@@ -58,7 +58,15 @@ export function createDemoHandler({
     if (location) headers.set('Location', location);
     return new Response(JSON.stringify(body), { status, headers });
   };
-  return async (request) => {
+  const resolveSession = async request => {
+    if(new URL(request.url).origin!==client.origin)return null;
+    const account=await store.get('session:'+readCookie(request,sessionCookie));
+    if(!account||account.expires<=clock())return null;
+    if(client.validateSession)await client.validateSession(account);
+    if(!account.playerId)return null;
+    return {playerId:account.playerId,gameId:account.gameId,environment:account.environment};
+  };
+  const handler = async (request) => {
     const url = new URL(request.url);
     if (url.origin !== client.origin)
       return response({ error: 'Wrong game origin.' }, 403);
@@ -137,4 +145,6 @@ export function createDemoHandler({
       ]);
     }
   };
+  handler.resolveProgressionSession=resolveSession;
+  return handler;
 }

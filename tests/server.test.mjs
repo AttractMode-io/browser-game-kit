@@ -99,3 +99,14 @@ test('login and logout return only to configured game paths',async t=>{
   r=await fetch(base+'/auth/logout?return_to='+encodeURIComponent(input),{method:'POST',headers:{origin:base},redirect:'manual'});assert.equal(r.headers.get('location'),base+expected);
  }
 });
+test('progression bridge resolves real local session and rejects logout replay before execution',async t=>{
+ const calls=[];const server=await createGameServer({port:0,env:{},progression:{localFixture:true,execute:async value=>{calls.push(value);return {xp:7};}}});t.after(()=>new Promise(r=>server.close(r)));
+ const origin='http://127.0.0.1:'+server.address().port;
+ const post=(cookie='')=>fetch(origin+'/api/game-progression',{method:'POST',headers:{origin,cookie,'Content-Type':'application/json'},body:JSON.stringify({action:'progress.get',data:{},playerId:'forged'})});
+ assert.equal((await post()).status,401);assert.equal(calls.length,0);
+ const start=await fetch(origin+'/auth/login',{method:'POST',headers:{origin},redirect:'manual'});const authorize=await fetch(start.headers.get('location'),{redirect:'manual'});const finish=await fetch(authorize.headers.get('location'),{headers:{cookie:cookieFrom(start)},redirect:'manual'});const session=cookieFrom(finish);
+ assert.equal((await post(session)).status,200);assert.notEqual(calls[0].principal.playerId,'forged');assert.equal(calls[0].principal.gameId,'offline-demo');
+ await fetch(origin+'/auth/logout',{method:'POST',headers:{origin,cookie:session},redirect:'manual'});
+ assert.equal((await post(session)).status,401);assert.equal(calls.length,1);
+ await assert.rejects(createGameServer({port:0,env:{AM_PROGRESSION_ENABLED:'true'}}),/Offline/);
+});

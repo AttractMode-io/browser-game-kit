@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0 Progression early access
+
+- Added private-session progression bridge, server-only scoped transport, revisioned save client and explicit conflict handling.
+- Added game XP, achievements, history and provenance-separated leaderboard client methods and accessible UI components.
+- Added persistent single-host puzzle validation with atomic event/outbox storage, restart recovery and retry acknowledgement.
+- Added progression integration documentation and read-only MCP discovery.
+- Requires matching platform migrations, reviewed enablement and separately issued scoped credentials. Available only to approved integrations with scoped credentials; external hosted pilot remains outstanding.
+- No global reputation, payment or competitive reward is inferred from browser assertions.
+
 ## 0.2.0 Stage 1 foundation
 
 - Added encrypted durable single-host sessions and a human local consent UI.
