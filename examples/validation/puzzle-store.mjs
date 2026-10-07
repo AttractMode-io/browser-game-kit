@@ -6,7 +6,10 @@ import {dirname,resolve} from 'node:path';
 export function createPuzzleStore({filename}) {
  const file=resolve(filename);mkdirSync(dirname(file),{recursive:true,mode:0o700});
  try {if(lstatSync(file).isSymbolicLink())throw Error('Database symlinks are not allowed');}catch(e){if(e.code!=='ENOENT')throw e;}
- const db=new DatabaseSync(file);chmodSync(file,0o600);db.exec('PRAGMA journal_mode=DELETE; PRAGMA busy_timeout=5000; CREATE TABLE IF NOT EXISTS challenges(id TEXT PRIMARY KEY,player TEXT NOT NULL,digest TEXT NOT NULL,expires INTEGER NOT NULL,event TEXT); CREATE TABLE IF NOT EXISTS sequences(player TEXT PRIMARY KEY,value INTEGER NOT NULL); CREATE TABLE IF NOT EXISTS outbox(id TEXT PRIMARY KEY,event TEXT NOT NULL,acknowledged INTEGER NOT NULL DEFAULT 0)');
+ const db=new DatabaseSync(file);chmodSync(file,0o600);
+ // Configure lock waiting before any operation that can acquire a database lock.
+ db.exec('PRAGMA busy_timeout=5000');
+ try{db.exec('PRAGMA journal_mode=DELETE; CREATE TABLE IF NOT EXISTS challenges(id TEXT PRIMARY KEY,player TEXT NOT NULL,digest TEXT NOT NULL,expires INTEGER NOT NULL,event TEXT); CREATE TABLE IF NOT EXISTS sequences(player TEXT PRIMARY KEY,value INTEGER NOT NULL); CREATE TABLE IF NOT EXISTS outbox(id TEXT PRIMARY KEY,event TEXT NOT NULL,acknowledged INTEGER NOT NULL DEFAULT 0)');}catch(error){db.close();throw error;}
  const transaction=fn=>{db.exec('BEGIN IMMEDIATE');try{const value=fn();db.exec('COMMIT');return value;}catch(e){db.exec('ROLLBACK');throw e;}};
  return {
   async insert(c){transaction(()=>{db.prepare('DELETE FROM challenges WHERE expires < ? AND event IS NULL').run(Date.now()-86400000);if(db.prepare('SELECT COUNT(*) AS n FROM challenges').get().n>=10000)throw Error('Challenge capacity reached');db.prepare('INSERT INTO challenges(id,player,digest,expires) VALUES(?,?,?,?)').run(c.id,c.playerId,c.digest,c.expiresAt);});},

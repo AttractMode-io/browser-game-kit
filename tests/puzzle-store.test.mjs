@@ -18,3 +18,16 @@ test('separate processes consume a challenge only once',async t=>{
  const source=`import {createPuzzleStore} from ${JSON.stringify(moduleURL)};const s=createPuzzleStore({filename:process.argv[1]});console.log(JSON.stringify(await s.consumeSolved('race','p','digest',Date.now())));s.close();`;
  const results=await Promise.all([exec(process.execPath,['--input-type=module','-e',source,filename]),exec(process.execPath,['--input-type=module','-e',source,filename])]);assert.deepEqual(JSON.parse(results[0].stdout),JSON.parse(results[1].stdout));const reopened=createPuzzleStore({filename});assert.equal((await reopened.pending()).length,1);reopened.close();
 });
+test('store startup waits for a separate connection write lock before journal and schema setup',async t=>{
+ const {DatabaseSync}=await import('node:sqlite');
+ const dir=mkdtempSync(join(tmpdir(),'am-puzzle-startup-lock-'));t.after(()=>rmSync(dir,{recursive:true,force:true}));const filename=join(dir,'state.db');
+ const initial=createPuzzleStore({filename});initial.close();
+ const holder=new DatabaseSync(filename);holder.exec('BEGIN EXCLUSIVE');
+ const moduleURL=new URL('../examples/validation/puzzle-store.mjs',import.meta.url).href;
+ const source=`import {createPuzzleStore} from ${JSON.stringify(moduleURL)};const s=createPuzzleStore({filename:process.argv[1]});console.log(JSON.stringify(await s.pending()));s.close();`;
+ // The child is a real independent writer. Its startup must wait for this lock,
+ // including journal-mode negotiation, rather than throw SQLITE_BUSY.
+ const attempt=exec(process.execPath,['--input-type=module','-e',source,filename]).then(value=>({value}),error=>({error}));
+ await new Promise(resolve=>setTimeout(resolve,300));holder.exec('ROLLBACK');holder.close();
+ const result=await attempt;if(result.error)throw result.error;assert.deepEqual(JSON.parse(result.value.stdout),[]);
+});

@@ -6,3 +6,5 @@ Developer onboarding fixes for the early-access progression kit.
 - Updated MCP resource documentation.
 
 Production progression still requires an approved project and scoped server credentials. No new permissions or hosted-service availability are introduced.
+
+Fixes concurrent SQLite store initialization: configure busy timeout before acquiring journal/schema locks. Includes deterministic multi-process regression and Linux validation.
