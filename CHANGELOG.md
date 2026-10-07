@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.3 - 2026-10-07
+
+- Clarified the operator-managed playtest path for listed external games: approved request, independent ownership verification and separate agreed session terms.
+- Kept tester and payout information private and distinguished campaign drafts from open recruitment.
+- Synchronized installed coding-agent guidance with the developer onboarding guide.
+- Documentation-only update; no new API permissions, payment features or automatic tester recruitment.
+
 ## 0.3.0 Progression early access
 
 - Added private-session progression bridge, server-only scoped transport, revisioned save client and explicit conflict handling.

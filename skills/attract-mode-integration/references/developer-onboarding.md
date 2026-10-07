@@ -35,13 +35,15 @@ Approval is not a live game page, functioning OAuth client or booked tester sess
 
 ## Account integration: prepare while review runs
 
-Run the [offline demo](https://github.com/AttractMode-io/browser-game-kit) and [production checklist](https://github.com/AttractMode-io/browser-game-kit/blob/main/docs/go-live.md). Use your existing backend and preserve guest play where supported. Start with the minimum justified scope. Register exact production and staging callbacks separately; no wildcards or another game's client. Keep state, S256 PKCE, nonce, issuer/audience/signature/expiry validation and one-use browser-bound transactions.
+Run the [offline demo](../README.md) and [production checklist](go-live.md). Use your existing backend and preserve guest play where supported. Start with the minimum justified scope. Register exact production and staging callbacks separately; no wildcards or another game's client. Keep state, S256 PKCE, nonce, issuer/audience/signature/expiry validation and one-use browser-bound transactions.
 
 Client configuration is delivered through an agreed private channel after review. Never paste a secret into the request, code, browser environment or issue. Use durable server-only TTL storage and an HTTPS backend. Third-party player consent remains mandatory. Test real registration and failure cases before describing the game as connected. A catalog page or verified claim cannot authorize player data access.
 
 ## Multiplayer playtests need a session plan
 
 For a typing-race game, describe room creation, join links/codes, whether two players or eight must join simultaneously, and the behavior to observe. Supply session duration, timezone and proposed dates. Ask concrete questions about joining a room, starting a race or understanding results, rather than asking for a positive review.
+
+For a listed external game, an operator checks the approved request and current independently verified game/studio ownership before arranging a managed campaign. The separate agreement fixes the session terms. Game and organizer details come from reviewed records; developers do not receive tester-directory or payout access. A draft campaign does not open recruitment.
 
 The team reviews availability and scope before agreeing a session. Confirm hosting, participant count, feedback delivery and reward terms before testers are invited. A proposed reward is not authorization to charge anyone or pay testers. Approval alone does not schedule a test. No tester count, turnaround, positive rating, traffic or revenue is guaranteed. `/playtests` serves testers applying to available managed campaigns, not developer intake.
 

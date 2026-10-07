@@ -43,6 +43,8 @@ Client configuration is delivered through an agreed private channel after review
 
 For a typing-race game, describe room creation, join links/codes, whether two players or eight must join simultaneously, and the behavior to observe. Supply session duration, timezone and proposed dates. Ask concrete questions about joining a room, starting a race or understanding results, rather than asking for a positive review.
 
+For a listed external game, an operator checks the approved request and current independently verified game/studio ownership before arranging a managed campaign. The separate agreement fixes the session terms. Game and organizer details come from reviewed records; developers do not receive tester-directory or payout access. A draft campaign does not open recruitment.
+
 The team reviews availability and scope before agreeing a session. Confirm hosting, participant count, feedback delivery and reward terms before testers are invited. A proposed reward is not authorization to charge anyone or pay testers. Approval alone does not schedule a test. No tester count, turnaround, positive rating, traffic or revenue is guaranteed. `/playtests` serves testers applying to available managed campaigns, not developer intake.
 
 ## Reference
