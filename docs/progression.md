@@ -4,6 +4,51 @@
 
 Players should be able to return to their saved game, see what they earned and recover when two devices disagree. This kit separates that experience from the evidence used to award anything competitive.
 
+## Start locally, without credentials
+
+Run these commands from the extracted kit directory after `npm ci --ignore-scripts`:
+
+```sh
+node --test tests/progression.test.mjs tests/progression-ui.test.mjs tests/puzzle-validation.test.mjs tests/puzzle-store.test.mjs
+npm run dev
+```
+
+Open `http://127.0.0.1:3000/examples/progression` to inspect synthetic achievement, leaderboard and save-conflict states. No real account, XP grant or cloud save is created. The tests exercise the included browser/bridge contracts, explicit conflict choices, durable SQLite challenge consumption and stable retry events. They do not connect to the platform database.
+
+To follow the executable server-validation recipe independently, run this from the kit root:
+
+```sh
+node --input-type=module <<'JS'
+import assert from 'node:assert/strict';
+import {createPuzzleValidator, createMemoryPuzzleStore} from './examples/validation/puzzle.mjs';
+const validator = createPuzzleValidator({
+  store: createMemoryPuzzleStore(),
+  sendEvent: async event => event // local observation only; no platform grant
+});
+const challenge = await validator.issue('local-player', {question:'2 + 3', answer:'5'});
+await assert.rejects(validator.solve('different-player', {challengeId:challenge.id, answer:'5'}));
+const input = {challengeId:challenge.id, answer:'5'};
+const first = await validator.solve('local-player', input);
+const retry = await validator.solve('local-player', input);
+assert.deepEqual(retry, first);
+console.log('Local validation passed: wrong player rejected; retry keeps the same event. No XP sent.');
+JS
+```
+
+The memory recipe is a test fixture; it does not supply a production sequence allocator or outbox. Use the durable recipe below for those requirements. A complete disposable local progression service is not bundled. `/examples/progression-connected` requires a configured service and must show unavailable sync when none exists. Do not rename the simulated demo as a production test.
+
+## Connect an approved game
+
+1. Complete the [account registration and hosted sign-in checklist](go-live.md). A listing, an OAuth client, and progression approval are separate requirements. Approval remains a reviewed manual step.
+2. Obtain the approved progression endpoint and separate credentials for the exact game/environment. Use a `player` credential for the browser bridge, `events` for the trusted validator and `definitions` for administration. Keep the last two outside the public game server's browser-facing bridge.
+3. Define your game rules, XP thresholds, achievement targets, statistic aggregation and season through the approved administration workflow. Record the resulting definition version. The kit has no automatic production provisioning command.
+4. In private backend configuration, set `AM_PROGRESSION_ENABLED=true`, `AM_PROGRESSION_ENDPOINT` and `AM_PROGRESSION_CREDENTIAL`. `.env.example` includes disabled placeholders. Never copy credentials into frontend build variables.
+5. Sign in through your actual hosted game, then use `/examples/progression-connected` or your own panel. The sample panel uses `client_reported` mode and its `completions` statistic; adapt its configuration to your approved definitions and intended provenance before expecting populated boards. An empty board is valid until a qualifying result is accepted and the player opts in.
+6. Configure your validator separately to submit durable `event.submit` records. Validate gameplay on the server before submission. Only after receiving acceptance should your UI report granted XP. Login and saving do not themselves validate a win.
+7. Complete the acceptance checklist below with two disposable authorized player accounts and record actual results before requesting a connected label. Do not reuse a live player's progression for destructive tests.
+
+`npm run doctor` checks account configuration and connectivity only. It does not currently verify progression credential scope/expiry, definitions, season, cloud writes or leaderboard readiness. Confirm those through the reviewed developer setup and explicit acceptance operations; a green doctor result is not a progression launch approval.
+
 ## Three trust levels
 
 Client-reported progress is editable by the player. A server-validated event records a decision your backend actually checked. An authoritative game server or verifiable replay can establish stronger evidence about play. Hosting a thin proxy, hiding an API key or signing a browser-supplied score does not turn that score into a verified result. Attract Mode validates credentials, isolation, rules and duplication; your game validates what happened.
@@ -54,7 +99,19 @@ For an authoritative simulation, the match server owns state and emits the resul
 
 ## Acceptance before release
 
-Run `node --test tests/progression.test.mjs tests/puzzle-validation.test.mjs` in the kit, plus the platform's transaction, credential and replay tests. Include simultaneous writes, timeout retries, changed payload retries, new-ID duplicate wins, account switching, cross-game attempts, expired credentials, recovery and rollback. This kit's mocked transport tests do not substitute for the platform integration suite or a hosted external game pilot.
+**Developer-owned checks, available in this ZIP:** run the local commands above and `npm test`. Then test your actual registered game against its approved staging/pilot service:
+
+- Sign in as account A, save a checkpoint and load it in a second independent session of A.
+- Read the same revision in both sessions. Save from the first, then submit the stale revision from the second. Expect HTTP 409, retain the local draft, and require an explicit choice. Do not silently retry with the new revision.
+- Recover an available older revision with the observed current revision, confirm explicitly, and verify it becomes a new revision. Canceling must leave both local and remote state intact.
+- Complete a genuinely qualifying server-validated challenge. Confirm one accepted event, expected game XP, achievement and statistic. Retry the exact persisted event after an ambiguous timeout; expect the same receipt without another grant.
+- Read definitions, accepted-event history and the correct stat/season/provenance board. Opt in, verify visibility, opt out, and verify removal on a fresh board read.
+- Sign out and switch to account B. A's saves, private history and UI cache must disappear. Verify session expiry and unavailable-sync recovery preserve guest play and local unsynced work.
+- Exercise credential rotation/revocation on dedicated pilot credentials through the approved administrator. Old access must fail; restoration must not require changing the persistent player-ID key. Never use another developer's credential to test isolation.
+
+**Platform-maintainer checks:** database transaction concurrency, scope enforcement, cross-game isolation, changed-payload replay, duplicate business keys, quota enforcement, rollback and correction tests belong to the private platform suite. They are not included in this public ZIP and developers are not expected to run unavailable commands. Request dated maintainer evidence for the service version used by your pilot.
+
+Keep fixture results, hosted first-party results and an independent external developer's acceptance separate. None substitutes for the others. Physical mobile-browser testing remains necessary for supported device claims.
 
 ## UI wiring
 

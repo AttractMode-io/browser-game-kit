@@ -49,18 +49,18 @@ Restart/reconnect and check that `get_capabilities`, `search_docs` and `read_doc
 | Tool | Input | Result |
 | --- | --- | --- |
 | get_capabilities | none | Release date, supported surfaces, registration requirements and unavailable API list. |
-| search_docs | query, 1–160 characters | Up to eight relevant paragraphs from fourteen fixed documents. |
-| read_doc | one of the fourteen document IDs below | One bundled page. |
+| search_docs | query, 1–160 characters | Up to eight relevant paragraphs from fifteen fixed documents. |
+| read_doc | one of the fifteen document IDs below | One bundled page. |
 
-Document IDs: `production-storage`, `local-sandbox`, `diagnostics`, `package-boundaries`, `integration`, `onboarding`, `request-template`, `skill`, `agents`, `threejs`, `phaser`, `static-frontend`, `troubleshooting`, and `mcp`.
+Document IDs: `progression`, `production-storage`, `local-sandbox`, `diagnostics`, `package-boundaries`, `integration`, `onboarding`, `request-template`, `skill`, `agents`, `threejs`, `phaser`, `static-frontend`, `troubleshooting`, and `mcp`.
 
-The `onboarding` document explains listing, sign-in and managed-playtest intake. The `request-template` document supplies the offline checklist; it cannot submit anything.
+The `progression` document covers approved early-access saves, XP, achievements, leaderboards and their trust boundaries. The `onboarding` document explains listing, sign-in and managed-playtest intake. The `request-template` document supplies the offline checklist; it cannot submit anything.
 
 The same pages are MCP resources under `attractmode://docs/…`. `attractmode://capabilities` contains the JSON capability manifest. These are MCP resource identifiers, not HTTP services. Search covers this downloaded release, not the live site's game catalog. Update the kit to get newer documentation.
 
 ## Security boundary
 
-The server reads only fifteen hardcoded package assets at startup: fourteen documents and the capability manifest. No client-controlled filesystem path, shell command, URL fetch, account access, telemetry, credentials, environment inspection or write tool exists. It does not listen on a network port. Tool arguments are schema-validated and search results are bounded. MCP client permissions still apply; read-only annotations describe behavior, not a grant of authority. This package has no production account credentials to expose.
+The server reads only sixteen hardcoded package assets at startup: fifteen documents and the capability manifest. No client-controlled filesystem path, shell command, URL fetch, account access, telemetry, credentials, environment inspection or write tool exists. It does not listen on a network port. Tool arguments are schema-validated and search results are bounded. MCP client permissions still apply; read-only annotations describe behavior, not a grant of authority. This package has no production account credentials to expose.
 
 MCP does not make unimplemented platform APIs available. Cloud saves, achievements, game XP and statistics require an approved integration and scoped server credentials; read the progression guide. Shared XP, payments, subscriptions and revenue sharing remain unavailable. A production OAuth client still requires independent registration. Keep this documentation server local; adding a public HTTP gateway needs a separate security design and is outside this kit.
 

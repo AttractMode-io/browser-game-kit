@@ -38,3 +38,9 @@ The browser panel gives session lookups five seconds, cancels a superseded looku
 The default offline mode is a signed identity simulation. The optional Docker sandbox provides a separate real local provider and human consent UI. It is not a hosted integration sandbox. Connected mode pins the official production issuer and requires reviewed registration. Unsupported environment values fail closed. Do not use real player credentials in fixtures or present local test identities as production accounts.
 
 For actual local provider integration rather than simulation, follow [the Docker/Supabase sandbox guide](local-sandbox.md). Doctor does not start Docker or mutate sandbox records.
+
+## Progression checks are separate
+
+Doctor currently checks account setup, hosting requirements and public connectivity. It does not test progression credentials, scope, expiry, definition versions, seasons, cloud-save writes or leaderboard readiness. An `ok: true` result therefore does not mean progression is ready to launch.
+
+Use the [progression quickstart and acceptance checklist](progression.md) after account setup. The disabled progression placeholders in `.env.example` require separately approved configuration. Keep player, event and definition credentials separate and private. Do not paste a credential into a support report or use a write operation merely to diagnose connectivity. Record the action, HTTP status, time and redacted error; reproduce writes only against authorized disposable pilot data.

@@ -110,3 +110,16 @@ test('progression bridge resolves real local session and rejects logout replay b
  assert.equal((await post(session)).status,401);assert.equal(calls.length,1);
  await assert.rejects(createGameServer({port:0,env:{AM_PROGRESSION_ENABLED:'true'}}),/Offline/);
 });
+
+test('documented synthetic progression quickstart serves its HTML and every local dependency without credentials',async t=>{
+ const server=await createGameServer({port:0,env:{}});t.after(()=>new Promise(resolve=>server.close(resolve)));
+ const base=`http://127.0.0.1:${server.address().port}`;
+ const page=await fetch(base+'/examples/progression');assert.equal(page.status,200);assert.match(page.headers.get('content-type'),/text\/html/);
+ const html=await page.text();assert.match(html,/synthetic players and progress/);assert.match(html,/does not award XP/);
+ for(const path of ['/examples/progression.mjs','/integrations/progression-ui.mjs','/integrations/progression-ui.css','/sample.css']){
+  const response=await fetch(base+path);assert.equal(response.status,200,path);
+  assert.match(response.headers.get('content-type'),path.endsWith('.mjs')?/javascript/:/text\/css/);
+ }
+ for(const path of ['/examples/validation/puzzle.mjs','/progression-server.mjs','/.env'])assert.notEqual((await fetch(base+path)).status,200,path);
+ assert.deepEqual(await (await fetch(base+'/api/me')).json(),{signedIn:false,demo:true});
+});

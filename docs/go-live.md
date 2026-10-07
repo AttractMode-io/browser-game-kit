@@ -42,7 +42,7 @@ The supplied server fails production startup without connected mode, a private p
 - Durable storage and atomic consume verified under multiple server instances.
 - Privacy/deletion information and operational contact supplied.
 
-Send the deployment URL and test evidence to the Attract Mode team. Listing, client registration and a connected badge are distinct steps. This starter does not create entitlements, award XP or collect payments.
+Send the deployment URL and test evidence to the Attract Mode team. Listing, client registration and a connected badge are distinct steps. Account login alone does not award XP. Separately configured [progression early access](progression.md) can award game-scoped XP from validated events after approval and scoped credential setup. Entitlements and payments remain unavailable.
 
 ## Troubleshooting
 
