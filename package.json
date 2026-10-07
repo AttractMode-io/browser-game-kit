@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "openid-client": "6.8.8",
-    "three": "0.186.0"
+    "three": "0.186.1"
   },
   "license": "MIT",
   "repository": {
