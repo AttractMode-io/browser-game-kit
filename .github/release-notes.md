@@ -1,8 +1,9 @@
-Clarifies how a listed external game can move from a reviewed playtest request to an operator-managed campaign.
+## Browser game kit 0.3.4
 
-- Requires an approved request and current independently verified game/studio ownership.
-- Session terms are agreed separately; a draft does not open recruitment or authorize payment.
-- Developers do not receive tester-directory or payout access.
-- The developer guide and installed coding-agent reference describe the same process.
+Updates the optional local documentation MCP to SDK 1.32.2 and Zod 4.6.7 and refreshes vulnerable transitive dependencies. Adds the M8ven publisher-verification badge.
 
-This is a documentation-only release. Runtime code, API permissions and credential requirements are unchanged. No tester availability or recruitment is guaranteed.
+The MCP still exposes only three read-only documentation tools over local stdio. Account integration and reviewed production access are unchanged.
+
+Download the ZIP, extract it, and follow README.md. Existing users should run `npm --prefix mcp ci --ignore-scripts` after updating.
+
+Validation: root tests, agent installer tests, MCP schema and stdio protocol tests, dependency audit, and extracted-release smoke check.
