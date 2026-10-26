@@ -8,6 +8,8 @@ A small, playable browser game that shows how to connect an approved third-party
 
 [Developer docs](https://attractmode.io/docs) · [Download ZIP](https://github.com/AttractMode-io/browser-game-kit/releases/latest/download/attract-mode-browser-game-kit.zip) · [Source](https://github.com/AttractMode-io/browser-game-kit) · [Report a bug](https://github.com/AttractMode-io/browser-game-kit/issues)
 
+[![M8ven Verified](https://m8ven.ai/badge/mcp/attractmode-io-browser-game-kit-o755ql?v=de9238d79e18b3d721a8d47e3eb55c19&variant=verified)](https://m8ven.ai/mcp/attractmode-io-browser-game-kit-o755ql?s=readme)
+
 Attract Mode is a browser-game discovery platform at [attractmode.io](https://attractmode.io). This repository is its MIT-licensed account-integration reference for browser-game developers. Listing a game and connecting its accounts are separate steps; a listing does not register an OAuth client.
 
 ## Get your game onto Attract Mode

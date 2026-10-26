@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.4 - 2026-10-24
+
+- Updated the optional documentation MCP to SDK 1.32.2 and Zod 4.6.7, with patched transitive dependencies.
+- Verified protocol negotiation, tool schemas and the fixed read-only documentation boundary against the updated dependencies.
+- Added the M8ven publisher-verification badge. The MCP remains local stdio only; no remote gateway or additional permissions were added.
+
 ## 0.3.3 - 2026-10-07
 
 - Clarified the operator-managed playtest path for listed external games: approved request, independent ownership verification and separate agreed session terms.
