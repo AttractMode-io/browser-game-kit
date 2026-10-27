@@ -123,3 +123,21 @@ test('documented synthetic progression quickstart serves its HTML and every loca
  for(const path of ['/examples/validation/puzzle.mjs','/progression-server.mjs','/.env'])assert.notEqual((await fetch(base+path)).status,200,path);
  assert.deepEqual(await (await fetch(base+'/api/me')).json(),{signedIn:false,demo:true});
 });
+
+test('achievement bridge binds queued scope to the actual game session and blocks logout replay',async t=>{
+ const {createAchievementScope}=await import('../integrations/achievements.mjs');
+ const calls=[];const server=await createGameServer({port:0,env:{},achievements:{localFixture:true,execute:async value=>{calls.push(value);return {projections:[]};}}});t.after(()=>new Promise(r=>server.close(r)));
+ const origin='http://127.0.0.1:'+server.address().port;
+ const post=(cookie='',expectedScope='stale')=>fetch(origin+'/api/game-achievements',{method:'POST',headers:{origin,cookie,'Content-Type':'application/json'},body:JSON.stringify({action:'progress.get',data:{setId:'harbor-base'},playerId:'forged',expectedScope})});
+ assert.equal((await post()).status,401);
+ const start=await fetch(origin+'/auth/login?return_to=%2Fexamples%2Fachievements-connected',{method:'POST',headers:{origin},redirect:'manual'});const authorize=await fetch(start.headers.get('location'),{redirect:'manual'});const finish=await fetch(authorize.headers.get('location'),{headers:{cookie:cookieFrom(start)},redirect:'manual'});const session=cookieFrom(finish);
+ assert.match(finish.headers.get('location'),/examples\/achievements-connected$/);
+ const me=await (await fetch(origin+'/api/me',{headers:{cookie:session}})).json();const scope=createAchievementScope(me.account);
+ assert.equal((await post(session)).status,409);assert.equal(calls.length,0);
+ assert.equal((await post(session,scope)).status,200);assert.equal(calls[0].playerId,me.account.playerId);assert.notEqual(calls[0].playerId,'forged');
+ await fetch(origin+'/auth/logout',{method:'POST',headers:{origin,cookie:session},redirect:'manual'});
+ assert.equal((await post(session,scope)).status,401);assert.equal(calls.length,1);
+ for(const path of ['/examples/achievements-connected','/examples/achievements-connected.mjs','/integrations/achievements.mjs'])assert.equal((await fetch(origin+path)).status,200,path);
+ for(const path of ['/achievements-server.mjs','/.env'])assert.notEqual((await fetch(origin+path)).status,200,path);
+ await assert.rejects(createGameServer({port:0,env:{AM_ACHIEVEMENTS_ENABLED:'true'}}),/Offline/);
+});
