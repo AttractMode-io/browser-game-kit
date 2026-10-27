@@ -1,0 +1,5 @@
+.am-achievement-panel { color: inherit; font: inherit; max-width: 42rem; padding: 1rem; border: 1px solid currentColor; border-radius: .75rem; overflow-wrap: anywhere; }
+.am-achievement-panel ul { padding: 0; list-style: none; display: grid; gap: 1rem; }
+.am-achievement-panel li { padding: 1rem; border: 1px solid currentColor; border-radius: .5rem; }
+.am-achievement-panel p { line-height: 1.5; margin: .5rem 0; }
+.am-achievement-panel [role=status] { min-height: 3rem; }
