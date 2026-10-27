@@ -1,0 +1,6 @@
+[
+  {"eventId":"evt-loss","occurrenceId":"run-loss","buildId":"web-1","type":"level.completed","payload":{"level":"harbor","won":false}},
+  {"eventId":"evt-win","occurrenceId":"run-win","buildId":"web-1","type":"level.completed","payload":{"level":"harbor","won":true}},
+  {"eventId":"evt-win","occurrenceId":"run-win","buildId":"web-1","type":"level.completed","payload":{"level":"harbor","won":true}},
+  {"eventId":"evt-other","occurrenceId":"run-other","buildId":"web-1","type":"level.completed","payload":{"level":"forest","won":true}}
+]
