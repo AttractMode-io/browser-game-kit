@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.0 - 2026-10-26 (release candidate)
+
+- Added typed browser/headless achievement clients, account-isolated bounded retries, accepted/pending/rejected results, original event timestamps and an optional silent accessible panel.
+- Added a deterministic schema-v1 rule engine, positive/negative/replay fixtures, local simulation and an explicitly configured connected sample using the existing game backend session.
+- Added CLI validation, diff, simulation, export and scoped remote draft/publication/build binding. Remote commands preview by default; execution requires a short-lived Studio authoring grant and exact project/environment confirmation.
+- Added four project-local achievement/progression skills, safe installer selection, complete TypeScript declarations, migration guidance and two new read-only MCP documents. Bundled documentation MCP is 1.1.0; its three tools remain read-only.
+- Preserved legacy definitions.put, saves and progression adapters. No automatic award import, XP transfer or email-based career merge. Optional profile linking requires authenticated game proof and explicit central account consent.
+- Hosted versioned-set access remains an approved browser pilot: matching platform migrations/service, default-off global and project enablement, approved registration and scoped server credentials are required. Local verification is not an independent developer onboarding or hosted deployment claim.
+- No React Native adapter, global XP/ranking, automatic public sharing or independent anti-cheat certification. Released v0.3.4 remains unchanged.
+
 ## 0.3.4 - 2026-10-24
 
 - Updated the optional documentation MCP to SDK 1.32.2 and Zod 4.6.7, with patched transitive dependencies.
