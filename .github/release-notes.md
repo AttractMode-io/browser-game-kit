@@ -1,9 +1,11 @@
-## Browser game kit 0.3.4
+Versioned achievement sets for an approved browser pilot, with a complete local authoring and integration workflow.
 
-Updates the optional local documentation MCP to SDK 1.32.2 and Zod 4.6.7 and refreshes vulnerable transitive dependencies. Adds the M8ven publisher-verification badge.
+- Define semantic events and bounded rules; validate, compare and simulate manifests with repeatable fixtures.
+- Integrate a typed browser client through your existing authenticated game backend. Exact event retries retain identity and timestamps; pending sync is distinct from accepted awards.
+- Display progress with a silent accessible panel. Link the game career to a central collection only through explicit dual-proof consent.
+- Use four project-local skills and a read-only documentation MCP. CLI writes require a separate short-lived Studio grant; preview is the default.
+- Keep existing definitions.put, saves and legacy progression working. Follow the migration guide before changing a live career; there is no automatic history import or XP transfer.
 
-The MCP still exposes only three read-only documentation tools over local stdio. Account integration and reviewed production access are unchanged.
+Hosted access requires matching deployed services/migrations, explicit global and project pilot enablement, approved registration, a published release/build binding and scoped server credentials. Downloading this release does not enable production access. Local tests do not replace an independent developer onboarding or hosted browser pilot.
 
-Download the ZIP, extract it, and follow README.md. Existing users should run `npm --prefix mcp ci --ignore-scripts` after updating.
-
-Validation: root tests, agent installer tests, MCP schema and stdio protocol tests, dependency audit, and extracted-release smoke check.
+This release adds no React Native runtime adapter, network-wide XP/ranking, automatic sharing or independent anti-cheat guarantee. The previously released v0.3.4 remains immutable. The bundled docs MCP is version 1.1.0 with unchanged read-only authority.

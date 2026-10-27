@@ -2,13 +2,13 @@
 
 ![Attract Mode: Build your game. Open the door.](docs/assets/developer-kit.png)
 
+[![M8ven Verified](https://m8ven.ai/badge/mcp/attractmode-io-browser-game-kit-o755ql?v=de9238d79e18b3d721a8d47e3eb55c19&variant=verified)](https://m8ven.ai/mcp/attractmode-io-browser-game-kit-o755ql?s=readme)
+
 **Keep building your game. Give players an account they can bring with them.**
 
 A small, playable browser game that shows how to connect an approved third-party game to Attract Mode using OpenID Connect. Run it locally without an account or API key, then adapt the backend to your game. Includes a portable coding-agent skill and an optional read-only documentation MCP.
 
 [Developer docs](https://attractmode.io/docs) · [Download ZIP](https://github.com/AttractMode-io/browser-game-kit/releases/latest/download/attract-mode-browser-game-kit.zip) · [Source](https://github.com/AttractMode-io/browser-game-kit) · [Report a bug](https://github.com/AttractMode-io/browser-game-kit/issues)
-
-[![M8ven Verified](https://m8ven.ai/badge/mcp/attractmode-io-browser-game-kit-o755ql?v=de9238d79e18b3d721a8d47e3eb55c19&variant=verified)](https://m8ven.ai/mcp/attractmode-io-browser-game-kit-o755ql?s=readme)
 
 Attract Mode is a browser-game discovery platform at [attractmode.io](https://attractmode.io). This repository is its MIT-licensed account-integration reference for browser-game developers. Listing a game and connecting its accounts are separate steps; a listing does not register an OAuth client.
 
@@ -124,3 +124,11 @@ MIT licensed code. Attract Mode names and logo assets remain Attract Mode brandi
 ## Progression early access
 
 Version 0.3.0 adds cloud-save conflict handling, game XP and achievements, leaderboard displays and server validation recipes. Access is limited to approved integrations with scoped server credentials. Start with [the progression integration guide](docs/progression.md). An external hosted production pilot has not yet been completed. A browser assertion never becomes a verified result merely because it passes through a backend.
+
+## Achievement sets
+
+See [Achievement sets, game XP and accepted progress](docs/achievements.md) for the manifest, local simulator, CLI, event client and silent panel. Run `npm run dev` and open `/examples/achievements` for a local simulation without real accounts or rewards. Hosted use requires deployed services and approved access; source availability is not production activation.
+
+TypeScript declarations accompany the achievement client, server transport, rule engine and panel exports. Existing progression users should read [the legacy migration guide](docs/achievement-migration.md) before adopting versioned sets; no automatic career or XP import is provided.
+
+Release candidate: **0.4.0**. New versioned achievement sets are a browser pilot requiring approved project access, deployed service/schema, explicit enablement and scoped credentials. Local examples work without hosted access. React Native and network-wide XP are not included.

@@ -1,6 +1,6 @@
 {
   "name": "@attractmode/browser-game-kit",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "description": "A runnable browser game with a server-side Attract Mode account integration",
@@ -19,7 +19,8 @@
     "test:sandbox": "node sandbox/protocol-test.mjs",
     "sandbox:stop": "supabase stop --workdir sandbox",
     "sandbox:dev": "node sandbox/dev.mjs",
-    "start:production": "node --env-file=.env.production production.mjs"
+    "start:production": "node --env-file=.env.production production.mjs",
+    "achievements": "node tooling/achievements.mjs"
   },
   "dependencies": {
     "openid-client": "6.8.8",
@@ -59,6 +60,26 @@
     },
     "./progression-ui": "./integrations/progression-ui.mjs",
     "./progression-ui.css": "./integrations/progression-ui.css",
-    "./progression-panel": "./integrations/progression-panel.mjs"
+    "./progression-panel": "./integrations/progression-panel.mjs",
+    "./achievements": {
+      "types": "./contracts/achievements.d.ts",
+      "default": "./integrations/achievements.mjs"
+    },
+    "./achievements-server": {
+      "types": "./contracts/achievements-server.d.ts",
+      "node": "./achievements-server.mjs"
+    },
+    "./achievement-panel": {
+      "types": "./contracts/achievement-panel.d.ts",
+      "default": "./integrations/achievement-panel.mjs"
+    },
+    "./achievement-panel.css": "./integrations/achievement-panel.css",
+    "./achievement-rules": {
+      "types": "./contracts/achievement-rules.d.ts",
+      "default": "./contracts/achievement-rules.mjs"
+    },
+    "./achievement-types": {
+      "types": "./contracts/achievements.d.ts"
+    }
   }
 }

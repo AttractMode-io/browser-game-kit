@@ -34,6 +34,24 @@ Permission to use the submitted images [media_permission] (required before submi
 
 Optional public business contact [public_contact] (optional; maximum 200 characters):
 
+AI assistance in development [aiStatus] (optional; maximum 32 characters; choose assisted / none_declared / not_disclosed):
+
+Where AI was used [aiScopes] (optional; maximum 100 characters):
+
+Your development declaration [aiStatement] (optional; maximum 2000 characters):
+
+Public source for your declaration [aiSourceUrl] (optional; maximum 1000 characters):
+
+Which build or parts the declaration covers [aiAppliesTo] (optional; maximum 240 characters):
+
+Game platform [runtime] (optional; maximum 30 characters; choose browser / native / mod / emulator / console / unknown):
+
+Supported device types [supportedDevices] (optional; maximum 100 characters):
+
+Supported operating systems [supportedOperatingSystems] (optional; maximum 100 characters):
+
+Supported input types [supportedInputs] (optional; maximum 100 characters):
+
 Anything else we should know [notes] (optional; maximum 2000 characters):
 
 

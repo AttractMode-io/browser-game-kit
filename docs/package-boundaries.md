@@ -7,3 +7,7 @@ The package defines `./browser`, `./threejs` and `./phaser` browser entries. Its
 This kit is distributed through GitHub, not an advertised npm registry package. If you copy it into a monorepo, preserve its entry boundaries. Never put the client secret in a `VITE_`, `NEXT_PUBLIC_` or other browser-exposed variable. A public project ID, Origin header or browser-held token cannot prove an achievement was earned.
 
 Use issuer and subject as the backend account key. Do not expose a provider's internal account identifier as a public game profile, merge by email, or treat login as permission to access another game's data. A game-scoped player API must be separately documented and enabled before you call it.
+
+## Achievement modules
+
+`./achievements` is the personal-report headless browser client. `./achievement-panel` and its CSS are optional, silent DOM presentation. `./achievement-rules` is portable simulation logic, never an authority to issue remote rewards. `./achievement-types` provides shared declarations, not native authentication. `./achievements-server` is Node-only and must never enter a browser/native bundle. Existing progression exports remain unchanged.

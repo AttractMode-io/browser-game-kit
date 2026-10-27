@@ -2,7 +2,7 @@
 export function mountAccountUI({ element, fetchImpl = globalThis.fetch, timeoutMs = 5000, returnTo = '/' }) {
   if (!element || typeof element.replaceChildren !== 'function') throw Error('Supply an account UI element.');
   if (!Number.isFinite(timeoutMs) || timeoutMs < 1 || timeoutMs > 30000) throw Error('timeoutMs must be between 1 and 30000.');
-  if (!['/','/examples/threejs'].includes(returnTo)) throw Error('Use an allowlisted game return path.');
+  if (!['/','/examples/threejs','/examples/achievements-connected'].includes(returnTo)) throw Error('Use an allowlisted game return path.');
   const suffix=returnTo==='/'?'':'?return_to='+encodeURIComponent(returnTo);
   const document = element.ownerDocument;
   const status = document.createElement('p');

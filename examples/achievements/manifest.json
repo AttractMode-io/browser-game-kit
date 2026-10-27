@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "setId": "harbor-base",
+  "title": "Harbor crossings",
+  "description": "A small sandbox set for learning semantic events and one-time rewards.",
+  "earningScope": "lifetime",
+  "events": {
+    "level.completed": {
+      "fields": {"level": {"type": "string", "maxLength": 80}, "won": {"type": "boolean"}}
+    }
+  },
+  "stats": [{"id": "harbor-wins", "event": "level.completed", "op": "count", "where": [{"field": "level", "op": "eq", "value": "harbor"}, {"field": "won", "op": "eq", "value": true}]}],
+  "achievements": [{"id": "first-crossing", "title": "First crossing", "description": "Win the harbor level.", "secret": false, "points": 10, "xp": 25, "condition": {"stat": "harbor-wins", "op": "gte", "value": 1}}],
+  "levels": [{"level": 1, "xp": 0}, {"level": 2, "xp": 100}]
+}

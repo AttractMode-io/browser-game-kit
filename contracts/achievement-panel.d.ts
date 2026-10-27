@@ -1,0 +1,3 @@
+import type {AchievementNotification,AchievementProgress,AchievementProjection} from './achievements.js';
+export interface AchievementPanelClient {getProgress(input:{setId:string}):Promise<AchievementProgress|AchievementProjection>;subscribe?(listener:(event:AchievementNotification)=>void):()=>void;}
+export declare function mountAchievementPanel(options:{element:HTMLElement;client:AchievementPanelClient;setId:string;title?:string;notifications?:boolean}):{refresh():Promise<AchievementProgress|AchievementProjection|null>;render(progress:AchievementProgress|AchievementProjection):void;destroy():void;};
