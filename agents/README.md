@@ -49,3 +49,7 @@ Project skill paths were checked against these official sources September 29, 20
 - [Claude Code skills](https://code.claude.com/docs/en/skills)
 - [Cursor skills](https://cursor.com/docs/skills)
 - [Gemini CLI skills](https://geminicli.com/docs/cli/skills/)
+
+## Achievement workflow skills
+
+The same installer accepts an optional skill name: `node agents/install.mjs codex /path/to/game attract-mode-achievement-design`. Available additions are `attract-mode-achievement-design`, `attract-mode-progression-integration`, `attract-mode-progression-qa` and `attract-mode-progression-release`. Existing skills are never overwritten. These project-local instructions use the installed kit and do not grant platform access.
