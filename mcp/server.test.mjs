@@ -14,12 +14,12 @@ async function local(t) {
  t.after(async()=>{await client.close();await server.close();});
  return client;
 }
-test('SDK discovery exposes only three read-only tools and sixteen fixed resources',async t=>{
+test('SDK discovery exposes only three read-only tools and eighteen fixed resources',async t=>{
  const client=await local(t);
  const {tools}=await client.listTools();
  assert.deepEqual(tools.map(t=>t.name).sort(),['get_capabilities','read_doc','search_docs']);
  for(const tool of tools){assert.equal(tool.annotations.readOnlyHint,true);assert.equal(tool.annotations.openWorldHint,false);}
- const {resources}=await client.listResources(); assert.equal(resources.length,16);
+ const {resources}=await client.listResources(); assert.equal(resources.length,18);
  for(const resource of resources){const result=await client.readResource({uri:resource.uri});assert.ok(result.contents[0].text.length>50);}
 });
 test('capability manifest explicitly bounds production and unavailable APIs',async t=>{
@@ -80,3 +80,15 @@ test('onboarding and template remain read-only and describe private reviewed int
  const result=await client.callTool({name:'submit_request',arguments:{}});
  assert.equal(result.isError,true);
 });
+
+
+test('achievement documentation is readable without gaining authoring tools', async t=>{
+ const client=await local(t);
+ const result=await client.callTool({name:'read_doc',arguments:{id:'achievements'}});
+ assert.match(result.content[0].text,/short-lived/);
+ assert.match(result.content[0].text,/Personal reports/);
+ const denied=await client.callTool({name:'publish_achievement_set',arguments:{}});
+ assert.equal(denied.isError,true);
+});
+
+test('legacy migration is a fixed read-only document with no automatic import claim',async t=>{const client=await local(t);const result=await client.callTool({name:'read_doc',arguments:{id:'achievement-migration'}});assert.match(result.content[0].text,/no automatic legacy-award import/);});

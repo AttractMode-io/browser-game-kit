@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "verifiedAt": "2026-10-06",
-  "releaseScope": "Bundled 0.3.0 early-access contract; not a live account eligibility or service status probe.",
+  "verifiedAt": "2026-10-26",
+  "releaseScope": "Bundled 0.4.0 browser achievement pilot candidate. Local tests do not establish hosted deployment or account eligibility.",
   "officialRepository": "https://github.com/AttractMode-io/browser-game-kit",
   "capabilities": [
     {
@@ -89,7 +89,7 @@
       "description": "Game-scoped XP, statistics and provenance-separated leaderboards. No global reputation. Browser-reported results remain unverified."
     }
   ],
-  "kitVersion": "0.3.0",
+  "kitVersion": "0.4.0",
   "launchConfiguration": {
     "status": "reviewed_configuration",
     "workspace": "https://attractmode.io/developers?task=sign_in",
@@ -122,5 +122,23 @@
     "globalReputation": false,
     "productionAccess": "Approved registration and scoped credential required",
     "externalHostedPilotCompleted": false
+  },
+  "achievementAuthoring": {
+    "status": "preview_requires_service_deployment",
+    "documentation": "docs/achievements.md",
+    "localTools": [
+      "validate",
+      "diff",
+      "simulate",
+      "export"
+    ],
+    "remoteTools": "Authenticated Developer Studio or short-lived project-scoped authoring token; CLI remote commands default to preview",
+    "runtime": [
+      "personal_report_bff",
+      "publisher_validated_server"
+    ],
+    "nativeAdapter": false,
+    "globalXP": false,
+    "readOnlyMcp": true
   }
 }
