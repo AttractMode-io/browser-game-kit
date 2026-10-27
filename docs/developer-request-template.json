@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "purpose": "Prepare a private reviewed request, not an API call or automatic publication.",
   "workspace": "https://attractmode.io/developers",
   "emailFallback": "hello@attractmode.io",
@@ -21,6 +21,15 @@
         "media_credit": "",
         "media_permission": "",
         "public_contact": "",
+        "aiStatus": "",
+        "aiScopes": "",
+        "aiStatement": "",
+        "aiSourceUrl": "",
+        "aiAppliesTo": "",
+        "runtime": "",
+        "supportedDevices": "",
+        "supportedOperatingSystems": "",
+        "supportedInputs": "",
         "notes": ""
       },
       "definitions": [
@@ -118,6 +127,82 @@
           "label": "Optional public business contact",
           "type": "text",
           "maxLength": 200,
+          "required": false
+        },
+        {
+          "name": "aiStatus",
+          "label": "AI assistance in development",
+          "type": "select",
+          "maxLength": 32,
+          "required": false,
+          "options": [
+            "assisted",
+            "none_declared",
+            "not_disclosed"
+          ]
+        },
+        {
+          "name": "aiScopes",
+          "label": "Where AI was used",
+          "type": "text",
+          "maxLength": 100,
+          "required": false
+        },
+        {
+          "name": "aiStatement",
+          "label": "Your development declaration",
+          "type": "textarea",
+          "maxLength": 2000,
+          "required": false
+        },
+        {
+          "name": "aiSourceUrl",
+          "label": "Public source for your declaration",
+          "type": "url",
+          "maxLength": 1000,
+          "required": false
+        },
+        {
+          "name": "aiAppliesTo",
+          "label": "Which build or parts the declaration covers",
+          "type": "text",
+          "maxLength": 240,
+          "required": false
+        },
+        {
+          "name": "runtime",
+          "label": "Game platform",
+          "type": "select",
+          "maxLength": 30,
+          "required": false,
+          "options": [
+            "browser",
+            "native",
+            "mod",
+            "emulator",
+            "console",
+            "unknown"
+          ]
+        },
+        {
+          "name": "supportedDevices",
+          "label": "Supported device types",
+          "type": "text",
+          "maxLength": 100,
+          "required": false
+        },
+        {
+          "name": "supportedOperatingSystems",
+          "label": "Supported operating systems",
+          "type": "text",
+          "maxLength": 100,
+          "required": false
+        },
+        {
+          "name": "supportedInputs",
+          "label": "Supported input types",
+          "type": "text",
+          "maxLength": 100,
           "required": false
         },
         {
