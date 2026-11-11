@@ -23,7 +23,7 @@
     "achievements": "node tooling/achievements.mjs"
   },
   "dependencies": {
-    "openid-client": "6.8.8",
+    "openid-client": "6.8.9",
     "three": "0.186.0"
   },
   "license": "MIT",
